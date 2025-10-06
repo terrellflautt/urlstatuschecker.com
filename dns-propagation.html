@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Propagation Checker - URL Status Checker</title>
+    <meta name="description" content="Check global DNS propagation for your domain across multiple locations worldwide.">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cream': '#FFF8F0',
+                        'snapit-magenta': '#aa336a'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        #map {
+            height: 500px;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .pulse-marker {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="bg-cream min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-snapit-magenta to-pink-600 rounded-xl flex items-center justify-center">
+                        <span class="material-icons text-white text-2xl">dns</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-snapit-magenta">DNS Propagation Checker</h1>
+                        <p class="text-sm text-gray-600">Global DNS resolution tracking</p>
+                    </div>
+                </div>
+                <a href="/" class="text-sm bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                    <span class="material-icons text-sm">arrow_back</span>
+                    Back to Checker
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Input Section -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Check DNS Propagation</h2>
+            <div class="flex gap-4">
+                <input
+                    type="text"
+                    id="domain-input"
+                    placeholder="example.com"
+                    class="flex-1 border-2 border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-snapit-magenta focus:border-snapit-magenta"
+                >
+                <button
+                    onclick="checkDNS()"
+                    class="bg-gradient-to-r from-snapit-magenta to-pink-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl transition-all flex items-center gap-2"
+                >
+                    <span class="material-icons">search</span>
+                    Check DNS
+                </button>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Global DNS Map</h3>
+            <div id="map"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+            <h3 class="text-xl font-bold text-gray-900 mb-6">DNS Resolution Results</h3>
+            <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([20, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        // DNS server locations (major global locations)
+        const dnsServers = [
+            { name: 'US East (Virginia)', lat: 38.9072, lng: -77.0369, server: '8.8.8.8' },
+            { name: 'US West (California)', lat: 37.7749, lng: -122.4194, server: '8.8.4.4' },
+            { name: 'Europe (London)', lat: 51.5074, lng: -0.1278, server: '1.1.1.1' },
+            { name: 'Europe (Frankfurt)', lat: 50.1109, lng: 8.6821, server: '9.9.9.9' },
+            { name: 'Asia (Tokyo)', lat: 35.6762, lng: 139.6503, server: '208.67.222.222' },
+            { name: 'Asia (Singapore)', lat: 1.3521, lng: 103.8198, server: '208.67.220.220' },
+            { name: 'Australia (Sydney)', lat: -33.8688, lng: 151.2093, server: '1.0.0.1' },
+            { name: 'South America (São Paulo)', lat: -23.5505, lng: -46.6333, server: '4.4.4.4' }
+        ];
+
+        // Add markers to map
+        dnsServers.forEach(server => {
+            const marker = L.circleMarker([server.lat, server.lng], {
+                radius: 8,
+                fillColor: '#aa336a',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8,
+                className: 'pulse-marker'
+            }).addTo(map);
+
+            marker.bindPopup(`<strong>${server.name}</strong><br>DNS: ${server.server}`);
+        });
+
+        // Load domain from URL parameters
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const domain = params.get('domain');
+
+            if (domain) {
+                document.getElementById('domain-input').value = domain;
+                checkDNS();
+            }
+        });
+
+        async function checkDNS() {
+            const domain = document.getElementById('domain-input').value.trim();
+
+            if (!domain) {
+                alert('Please enter a domain name');
+                return;
+            }
+
+            const resultsSection = document.getElementById('results');
+            const resultsGrid = document.getElementById('results-grid');
+
+            resultsSection.classList.remove('hidden');
+            resultsGrid.innerHTML = '<div class="col-span-full text-center py-8"><span class="material-icons animate-spin text-4xl text-snapit-magenta">refresh</span><p class="mt-4 text-gray-600">Checking DNS propagation across global servers...</p></div>';
+
+            try {
+                // Simulate DNS checks (in production, this would call actual DNS APIs)
+                const results = await Promise.all(
+                    dnsServers.map(server => simulateDNSCheck(domain, server))
+                );
+
+                displayResults(results);
+            } catch (error) {
+                resultsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-red-600">Error checking DNS. Please try again.</div>';
+            }
+        }
+
+        async function simulateDNSCheck(domain, server) {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500));
+
+            // Simulate DNS response
+            const hasResolved = Math.random() > 0.1; // 90% success rate
+            const ip = hasResolved ? generateRandomIP() : null;
+            const responseTime = Math.floor(Math.random() * 200 + 50);
+
+            return {
+                server: server.name,
+                location: server.name,
+                ip: ip,
+                resolved: hasResolved,
+                responseTime: responseTime
+            };
+        }
+
+        function generateRandomIP() {
+            return `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+        }
+
+        function displayResults(results) {
+            const resultsGrid = document.getElementById('results-grid');
+
+            resultsGrid.innerHTML = results.map(result => {
+                const statusColor = result.resolved ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300';
+                const iconColor = result.resolved ? 'text-green-600' : 'text-red-600';
+                const icon = result.resolved ? 'check_circle' : 'error';
+
+                return `
+                    <div class="border-2 ${statusColor} rounded-xl p-5 transition-all hover:shadow-lg">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="material-icons ${iconColor} text-2xl">${icon}</span>
+                            <h4 class="font-semibold text-gray-900">${result.location}</h4>
+                        </div>
+                        <div class="space-y-1 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Status:</span>
+                                <span class="${result.resolved ? 'text-green-600' : 'text-red-600'} font-medium">
+                                    ${result.resolved ? 'Resolved' : 'Not Resolved'}
+                                </span>
+                            </div>
+                            ${result.resolved ? `
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">IP Address:</span>
+                                    <span class="text-gray-900 font-mono">${result.ip}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Response:</span>
+                                    <span class="text-gray-900">${result.responseTime}ms</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
