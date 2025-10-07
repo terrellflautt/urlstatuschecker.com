@@ -31,7 +31,7 @@
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com https://fonts.gstatic.com https://unpkg.com;
         font-src 'self' https://fonts.gstatic.com;
         img-src 'self' data: blob: https:;
-        connect-src 'self' https://accounts.google.com https://www.googleapis.com https://api.urlstatuschecker.com https://auth.urlstatuschecker.com https://*.execute-api.us-east-1.amazonaws.com wss://*.execute-api.us-east-1.amazonaws.com;
+        connect-src 'self' https://accounts.google.com https://www.googleapis.com https://api.urlstatuschecker.com https://auth.urlstatuschecker.com https://*.urlstatuschecker.com https://*.execute-api.us-east-1.amazonaws.com wss://*.execute-api.us-east-1.amazonaws.com https://unpkg.com https://r.stripe.com https://*.stripe.com;
         frame-src 'self' https://accounts.google.com https://js.stripe.com https://*.google.com;
         object-src 'none';
         base-uri 'self';
@@ -51,20 +51,17 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Leaflet for Maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
+                        primary: '#aa336a',
+                        secondary: '#d946ef',
                         success: '#10b981',
                         danger: '#ef4444',
-                        warning: '#f59e0b'
+                        warning: '#f59e0b',
+                        'snapit-magenta': '#aa336a'
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif']
