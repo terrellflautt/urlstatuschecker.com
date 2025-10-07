@@ -3,43 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Status Checker - Professional Batch URL Monitoring</title>
-    <meta name="description" content="Check up to 100 URLs instantly. Professional batch URL status checker with real-time results. Monitor website uptime efficiently.">
-    
+
+    <!-- SEO Meta Tags -->
+    <title>URL Status Checker - Free HTTP Status Code & DNS Propagation Tool</title>
+    <meta name="description" content="Professional URL status checker with real-time HTTP status codes, DNS propagation maps, and troubleshooting guides. Check up to 100 URLs instantly. Free tool for developers and SEO professionals.">
+    <meta name="keywords" content="URL status checker, HTTP status codes, DNS propagation, website uptime monitor, 404 checker, status code analyzer, SEO tools">
+    <meta name="author" content="URL Status Checker">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://urlstatuschecker.com">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="URL Status Checker - Professional HTTP & DNS Tool">
+    <meta property="og:description" content="Check HTTP status codes and DNS propagation for up to 100 URLs instantly. Free professional tool with troubleshooting guides.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://urlstatuschecker.com">
+    <meta property="og:image" content="https://urlstatuschecker.com/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="URL Status Checker - Professional HTTP & DNS Tool">
+    <meta name="twitter:description" content="Check HTTP status codes and DNS propagation for up to 100 URLs instantly.">
+
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://gsi.gstatic.com https://apis.google.com https://js.stripe.com https://*.google.com https://*.googleapis.com https://*.gstatic.com https://cdn.tailwindcss.com https://unpkg.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com https://fonts.gstatic.com https://unpkg.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: blob: https:;
+        connect-src 'self' https://accounts.google.com https://www.googleapis.com https://api.urlstatuschecker.com https://auth.urlstatuschecker.com https://*.execute-api.us-east-1.amazonaws.com wss://*.execute-api.us-east-1.amazonaws.com;
+        frame-src 'self' https://accounts.google.com https://js.stripe.com https://*.google.com;
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self' https://accounts.google.com
+    ">
+
     <!-- Google OAuth -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
+
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
+    <!-- Leaflet for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'cream': '#FFF8F0',
-                        'snapit-magenta': '#aa336a'
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        success: '#10b981',
+                        danger: '#ef4444',
+                        warning: '#f59e0b'
                     },
                     fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                        sans: ['Inter', 'system-ui', 'sans-serif']
                     },
                     animation: {
-                        'fadeIn': 'fadeIn 0.3s ease-in-out',
-                        'slideIn': 'slideIn 0.4s ease-out',
-                        'scaleIn': 'scaleIn 0.2s ease-out'
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'scale-in': 'scaleIn 0.2s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                     },
                     keyframes: {
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' }
                         },
-                        slideIn: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
                             '100%': { transform: 'translateY(0)', opacity: '1' }
                         },
                         scaleIn: {
-                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
                             '100%': { transform: 'scale(1)', opacity: '1' }
                         }
                     }
@@ -49,57 +95,93 @@
     </script>
 
     <style>
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #aa336a;
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8a2855;
-        }
-
-        /* Smooth transitions */
         * {
-            transition: all 0.2s ease;
+            box-sizing: border-box;
         }
 
-        /* Pulse animation for favorites */
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
         }
-        .animate-pulse-once {
-            animation: pulse 0.3s ease-in-out;
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4f46e5, #7c3aed);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .status-badge {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .status-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="bg-cream min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+
+    <!-- Language Selector (Fixed Top Right) -->
+    <div class="fixed top-4 right-4 z-50">
+        <select id="language-selector" class="glass border border-indigo-200 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:border-indigo-400 transition-colors cursor-pointer shadow-lg">
+            <option value="en">🇺🇸 English</option>
+            <option value="es">🇪🇸 Español</option>
+        </select>
+    </div>
+
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4">
+    <header class="glass border-b border-indigo-100 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-6">
             <div class="flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-gradient-to-r from-snapit-magenta to-pink-600 rounded-xl flex items-center justify-center">
-                        <span class="material-icons text-white text-2xl">monitor_heart</span>
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg float-animation">
+                        <span class="material-icons text-white text-3xl">speed</span>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-snapit-magenta">URL Status Checker</h1>
-                        <p class="text-sm text-gray-600">Professional batch monitoring</p>
+                        <h1 class="text-3xl font-extrabold gradient-text" data-i18n="site-title">URL Status Checker</h1>
+                        <p class="text-sm text-gray-600 font-medium" data-i18n="site-subtitle">Professional HTTP & DNS Tool</p>
                     </div>
                 </div>
-                
+
                 <div class="flex items-center gap-4">
-                    <div id="rate-limit-info" class="text-sm text-gray-600"></div>
-                    
-                    <div id="auth-section">
-                        <button id="sign-in-btn" class="bg-snapit-magenta text-white px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition-colors">
-                            Sign In for Favorites
+                    <div id="rate-limit-display" class="text-sm font-medium text-gray-600"></div>
+                    <div id="auth-container">
+                        <button id="sign-in-btn" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                            <span class="material-icons text-sm align-middle mr-1">login</span>
+                            <span data-i18n="sign-in">Sign In</span>
                         </button>
                     </div>
                 </div>
@@ -107,819 +189,659 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        <!-- User Dashboard (shown when signed in) -->
-        <div id="user-dashboard" class="hidden mb-8">
-            <div class="bg-white rounded-2xl shadow-lg p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-2xl font-bold text-snapit-magenta">Your Favorites Dashboard</h2>
-                        <p id="dashboard-welcome" class="text-gray-600 mt-1">Manage your favorite URLs and check them instantly.</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <button onclick="showMainView()" class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors">
-                            <span class="material-icons text-sm">arrow_back</span> Back to Main
-                        </button>
-                        <button id="upgrade-plan-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
-                            <span class="material-icons text-sm">stars</span> Upgrade Plan
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Plan Status -->
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-sm font-medium text-blue-700">Current Plan:</span>
-                            <span id="current-plan-name" class="text-lg font-bold text-blue-900 ml-2">Free</span>
-                        </div>
-                        <div class="text-right">
-                            <div id="favorites-usage" class="text-sm text-blue-700">0 / 100 favorites</div>
-                            <div class="text-xs text-blue-600">Up to 400 checks per day</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Favorites List -->
-                <div id="favorites-list" class="space-y-3">
-                    <div class="text-center text-gray-500 py-8">
-                        <span class="material-icons text-4xl mb-4">add_circle_outline</span>
-                        <p>Add URLs to your favorites from the main checker</p>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+
+        <!-- Hero Section -->
+        <div class="text-center mb-12 animate-fade-in">
+            <h2 class="text-5xl font-extrabold text-gray-900 mb-4" data-i18n="hero-title">
+                Check URL Status Codes Instantly
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-i18n="hero-subtitle">
+                Professional tool for checking HTTP status codes, DNS propagation, and troubleshooting website issues. Free for up to 100 URLs.
+            </p>
+        </div>
+
+        <!-- URL Input Section -->
+        <div class="glass rounded-3xl shadow-2xl p-8 mb-12 border border-indigo-100 animate-slide-up">
+            <div class="mb-6">
+                <label for="url-input" class="block text-lg font-bold text-gray-900 mb-3" data-i18n="input-label">
+                    Enter URLs to Check (one per line)
+                </label>
+                <div class="relative">
+                    <textarea
+                        id="url-input"
+                        rows="8"
+                        class="w-full px-6 py-4 border-2 border-indigo-200 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all font-mono text-sm resize-none"
+                        placeholder="https://example.com&#10;https://google.com&#10;https://github.com"
+                        data-i18n-placeholder="input-placeholder"
+                    ></textarea>
+                    <div id="url-counter" class="absolute bottom-4 right-4 px-4 py-2 bg-white rounded-lg shadow-md font-bold text-sm">
+                        <span id="url-count" class="text-gray-700">0</span>
+                        <span class="text-gray-400">/100</span>
                     </div>
                 </div>
-                
-                <!-- Check All Favorites Button -->
-                <div class="mt-6 text-center">
-                    <button id="check-all-favorites" class="bg-snapit-magenta text-white px-8 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors disabled:opacity-50" disabled>
-                        <span class="material-icons">refresh</span>
-                        Check All Favorites
-                    </button>
-                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-4">
+                <button id="check-btn" class="flex-1 bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span class="material-icons align-middle mr-2">play_arrow</span>
+                    <span data-i18n="check-button">Check Status</span>
+                </button>
+
+                <button id="load-examples-btn" class="px-8 py-4 border-2 border-indigo-300 text-indigo-700 rounded-xl font-bold hover:bg-indigo-50 transition-all">
+                    <span class="material-icons align-middle mr-2">lightbulb</span>
+                    <span data-i18n="load-examples">Load Examples</span>
+                </button>
+
+                <button id="clear-btn" class="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-all">
+                    <span class="material-icons align-middle mr-2">clear</span>
+                    <span data-i18n="clear-button">Clear</span>
+                </button>
+            </div>
+
+            <!-- File Upload -->
+            <div id="file-upload-zone" class="mt-6 border-2 border-dashed border-indigo-300 rounded-2xl p-8 text-center hover:border-primary hover:bg-indigo-50/50 transition-all cursor-pointer hidden">
+                <input type="file" id="file-input" accept=".txt,.csv" class="hidden">
+                <span class="material-icons text-6xl text-indigo-400 mb-3">cloud_upload</span>
+                <p class="text-lg font-semibold text-gray-700" data-i18n="file-upload-title">Drop a file or click to upload</p>
+                <p class="text-sm text-gray-500" data-i18n="file-upload-subtitle">Supports TXT and CSV files</p>
             </div>
         </div>
-        
-        <!-- Main URL Input Section -->
-        <div id="url-input-section" class="animate-fadeIn">
-            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Check URL Status</h2>
-                        <p class="text-gray-600">Enter URLs to check their status, response time, and availability</p>
-                    </div>
-                    <button
-                        id="load-favorites-btn"
-                        class="hidden bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:scale-105 flex items-center gap-2"
-                        onclick="loadFavoritesIntoInput()"
-                    >
-                        <span class="material-icons text-sm">stars</span>
-                        Load Favorites
-                    </button>
-                </div>
 
-                <div class="space-y-4">
-                    <!-- File Upload Area -->
-                    <div id="file-upload-area" class="hidden border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-snapit-magenta transition-colors cursor-pointer bg-gray-50">
-                        <span class="material-icons text-4xl text-gray-400 mb-2">cloud_upload</span>
-                        <p class="text-gray-600 mb-2">Drag & drop a TXT or CSV file here</p>
-                        <p class="text-sm text-gray-500">or click to browse</p>
-                        <input type="file" id="file-input" accept=".txt,.csv" class="hidden">
-                    </div>
-
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <label for="url-input" class="block text-sm font-semibold text-gray-700">
-                                Enter URLs (one per line)
-                            </label>
-                            <span id="url-count" class="text-xs text-gray-500">0 / 100 URLs</span>
-                        </div>
-                        <textarea
-                            id="url-input"
-                            placeholder="https://example.com
-https://google.com
-https://github.com"
-                            class="w-full h-48 border-2 border-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-snapit-magenta focus:border-snapit-magenta resize-none font-mono text-sm shadow-inner hover:border-gray-400 transition-all"
-                        ></textarea>
-                        <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
-                            <span>💡 Tip: Paste multiple URLs at once</span>
-                            <button onclick="loadExampleUrls()" class="text-snapit-magenta hover:underline">Load Examples</button>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-3">
-                        <button
-                            id="check-urls"
-                            class="flex-1 bg-gradient-to-r from-snapit-magenta to-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl transform hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
-                        >
-                            <span class="material-icons">play_arrow</span>
-                            Check Status
-                        </button>
-
-                        <button
-                            id="clear-input"
-                            class="border-2 border-gray-300 text-gray-700 px-6 py-4 rounded-xl font-medium hover:bg-gray-100 hover:border-gray-400 transition-all"
-                        >
-                            <span class="material-icons">clear</span>
-                        </button>
-                    </div>
-
-                    <div id="status-message" class="text-sm text-center py-2"></div>
-                </div>
-            </div>
+        <!-- Loading State -->
+        <div id="loading-state" class="hidden glass rounded-3xl shadow-2xl p-12 mb-12 text-center border border-indigo-100">
+            <div class="inline-block w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-xl font-bold text-gray-700" data-i18n="checking">Checking URLs...</p>
         </div>
 
         <!-- Results Section -->
-        <div id="results-section" class="hidden animate-slideIn">
-            <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900">Results</h3>
-                        <p class="text-sm text-gray-600 mt-1">Click any result to see detailed information</p>
-                    </div>
-                    <div class="flex gap-3">
-                        <button id="export-results" class="text-sm bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all hover:shadow-lg flex items-center gap-1">
-                            <span class="material-icons text-sm">download</span>
-                            Export CSV
-                        </button>
-                        <button id="clear-results" class="text-sm bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-all">
-                            Clear
-                        </button>
-                    </div>
-                </div>
+        <div id="results-section" class="hidden animate-fade-in">
+            <!-- Summary Cards -->
+            <div id="results-summary" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"></div>
 
-                <div id="results-summary" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"></div>
-                <div id="results-list" class="space-y-3"></div>
+            <!-- Results List -->
+            <div class="glass rounded-3xl shadow-2xl p-8 border border-indigo-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900" data-i18n="results-title">Check Results</h3>
+                    <button id="export-csv-btn" class="px-6 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-all">
+                        <span class="material-icons align-middle mr-2">download</span>
+                        <span data-i18n="export-csv">Export CSV</span>
+                    </button>
+                </div>
+                <div id="results-list" class="space-y-4"></div>
             </div>
         </div>
+
     </main>
 
+    <!-- Footer -->
+    <footer class="mt-20 py-12 glass border-t border-indigo-100">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-600" data-i18n="footer-text">
+                © 2025 URL Status Checker. Professional HTTP status code and DNS propagation tool.
+            </p>
+            <p class="text-sm text-gray-500 mt-2" data-i18n="footer-made-with">
+                Made with ❤️ for developers and SEO professionals worldwide
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
+
     <!-- Pricing Modal -->
-    <div id="pricing-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl p-8 max-w-4xl w-full mx-4 max-h-96 overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-900">Choose Your Plan</h2>
+    <div id="pricing-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+        <div class="glass rounded-3xl shadow-2xl max-w-5xl w-full p-8 max-h-[90vh] overflow-y-auto border border-indigo-200">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-bold text-gray-900" data-i18n="pricing-title">Choose Your Plan</h3>
                 <button onclick="closePricingModal()" class="text-gray-500 hover:text-gray-700">
-                    <span class="material-icons">close</span>
+                    <span class="material-icons text-3xl">close</span>
                 </button>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Free Plan -->
-                <div class="border border-gray-200 rounded-lg p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Free</h3>
-                    <div class="text-3xl font-bold text-gray-900 mb-4">$0<span class="text-lg text-gray-500">/month</span></div>
-                    <ul class="text-sm text-gray-600 space-y-2 mb-6">
-                        <li>✓ 100 URLs per check</li>
-                        <li>✓ 4 checks per day (400 total)</li>
-                        <li>✓ 100 favorites</li>
-                        <li>✓ Basic status checking</li>
-                    </ul>
-                    <button class="w-full bg-gray-600 text-white px-4 py-2 rounded-lg font-medium">
-                        Current Plan
-                    </button>
-                </div>
-                
-                <!-- Pro Plan -->
-                <div class="border border-snapit-magenta rounded-lg p-6 relative">
-                    <div class="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                        <span class="bg-snapit-magenta text-white px-3 py-1 rounded-full text-xs font-medium">POPULAR</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-snapit-magenta mb-2">Pro</h3>
-                    <div class="text-3xl font-bold text-gray-900 mb-4">$29<span class="text-lg text-gray-500">/month</span></div>
-                    <ul class="text-sm text-gray-600 space-y-2 mb-6">
-                        <li>✓ 100 URLs per check</li>
-                        <li>✓ Unlimited checks per day</li>
-                        <li>✓ 1,000 favorites</li>
-                        <li>✓ Email alerts</li>
-                        <li>✓ CSV export</li>
-                        <li>✓ API access</li>
-                    </ul>
-                    <button onclick="selectPlan('pro')" class="w-full bg-snapit-magenta text-white px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition-colors">
-                        Upgrade to Pro
-                    </button>
-                </div>
-                
-                <!-- Business Plan -->
-                <div class="border border-blue-500 rounded-lg p-6">
-                    <h3 class="text-xl font-bold text-blue-900 mb-2">Business</h3>
-                    <div class="text-3xl font-bold text-gray-900 mb-4">$99<span class="text-lg text-gray-500">/month</span></div>
-                    <ul class="text-sm text-gray-600 space-y-2 mb-6">
-                        <li>✓ 500 URLs per check</li>
-                        <li>✓ Unlimited checks</li>
-                        <li>✓ Unlimited favorites</li>
-                        <li>✓ Team sharing</li>
-                        <li>✓ Webhooks</li>
-                        <li>✓ Priority support</li>
-                    </ul>
-                    <button onclick="selectPlan('business')" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                        Upgrade to Business
-                    </button>
-                </div>
-            </div>
+            <div id="pricing-content" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
     </div>
 
     <script>
-        // Configuration
+        // ==================== CONFIGURATION ====================
         const API_BASE = 'https://omo54416yb.execute-api.us-east-1.amazonaws.com';
         const GOOGLE_CLIENT_ID = '242648112266-iglul54tuis9mhucsp1pmpqg0a48l8i0.apps.googleusercontent.com';
-        
-        // State management
+        const STRIPE_PUBLIC_KEY = 'pk_live_51SEhK7Ikj5YQseOZdDlxSF559wAxa2VaukNqsoFjehtq26Yr6lftlDso5HxqGyKVZy907ylLHgFOPYp9tBKLEDzk00KEYnlJ15';
+
+        const stripe = Stripe(STRIPE_PUBLIC_KEY);
+
+        // ==================== TRANSLATIONS ====================
+        const translations = {
+            en: {
+                'site-title': 'URL Status Checker',
+                'site-subtitle': 'Professional HTTP & DNS Tool',
+                'sign-in': 'Sign In',
+                'sign-out': 'Sign Out',
+                'hero-title': 'Check URL Status Codes Instantly',
+                'hero-subtitle': 'Professional tool for checking HTTP status codes, DNS propagation, and troubleshooting website issues. Free for up to 100 URLs.',
+                'input-label': 'Enter URLs to Check (one per line)',
+                'input-placeholder': 'https://example.com\nhttps://google.com\nhttps://github.com',
+                'check-button': 'Check Status',
+                'load-examples': 'Load Examples',
+                'clear-button': 'Clear',
+                'file-upload-title': 'Drop a file or click to upload',
+                'file-upload-subtitle': 'Supports TXT and CSV files',
+                'checking': 'Checking URLs...',
+                'results-title': 'Check Results',
+                'export-csv': 'Export CSV',
+                'footer-text': '© 2025 URL Status Checker. Professional HTTP status code and DNS propagation tool.',
+                'footer-made-with': 'Made with ❤️ for developers and SEO professionals worldwide',
+                'pricing-title': 'Choose Your Plan',
+                'online': 'Online',
+                'offline': 'Offline',
+                'total-checked': 'Total Checked',
+                'avg-time': 'Avg. Time (ms)',
+                'status-code': 'Status Code',
+                'response-time': 'Response Time',
+                'check-dns': 'Check DNS',
+                'add-favorite': 'Add to Favorites',
+                'remove-favorite': 'Remove from Favorites',
+                'sign-in-favorites': 'Sign in to save URLs to your favorites list',
+                'view-details': 'View Details',
+                'hide-details': 'Hide Details',
+                'description': 'Description',
+                'possible-problems': 'Possible Problems',
+                'solutions': 'Solutions',
+                'dns-propagation': 'DNS Propagation Check'
+            },
+            es: {
+                'site-title': 'Verificador de Estado de URL',
+                'site-subtitle': 'Herramienta Profesional HTTP y DNS',
+                'sign-in': 'Iniciar Sesión',
+                'sign-out': 'Cerrar Sesión',
+                'hero-title': 'Verifica Códigos de Estado de URL Instantáneamente',
+                'hero-subtitle': 'Herramienta profesional para verificar códigos de estado HTTP, propagación DNS y solucionar problemas de sitios web. Gratis para hasta 100 URLs.',
+                'input-label': 'Ingrese URLs para Verificar (una por línea)',
+                'input-placeholder': 'https://ejemplo.com\nhttps://google.com\nhttps://github.com',
+                'check-button': 'Verificar Estado',
+                'load-examples': 'Cargar Ejemplos',
+                'clear-button': 'Limpiar',
+                'file-upload-title': 'Suelta un archivo o haz clic para subir',
+                'file-upload-subtitle': 'Soporta archivos TXT y CSV',
+                'checking': 'Verificando URLs...',
+                'results-title': 'Resultados de Verificación',
+                'export-csv': 'Exportar CSV',
+                'footer-text': '© 2025 Verificador de Estado de URL. Herramienta profesional de códigos de estado HTTP y propagación DNS.',
+                'footer-made-with': 'Hecho con ❤️ para desarrolladores y profesionales SEO en todo el mundo',
+                'pricing-title': 'Elige Tu Plan',
+                'online': 'En Línea',
+                'offline': 'Fuera de Línea',
+                'total-checked': 'Total Verificado',
+                'avg-time': 'Tiempo Promedio (ms)',
+                'status-code': 'Código de Estado',
+                'response-time': 'Tiempo de Respuesta',
+                'check-dns': 'Verificar DNS',
+                'add-favorite': 'Añadir a Favoritos',
+                'remove-favorite': 'Quitar de Favoritos',
+                'sign-in-favorites': 'Inicia sesión para guardar URLs en tu lista de favoritos',
+                'view-details': 'Ver Detalles',
+                'hide-details': 'Ocultar Detalles',
+                'description': 'Descripción',
+                'possible-problems': 'Posibles Problemas',
+                'solutions': 'Soluciones',
+                'dns-propagation': 'Verificación de Propagación DNS'
+            }
+        };
+
+        // ==================== STATUS CODE DATABASE ====================
+        const statusCodeDatabase = {
+            200: {
+                name: 'OK',
+                desc: {
+                    en: 'The request was successful and the server returned the requested resource.',
+                    es: 'La solicitud fue exitosa y el servidor devolvió el recurso solicitado.'
+                },
+                problems: {
+                    en: 'No problems - this is the ideal response.',
+                    es: 'Sin problemas - esta es la respuesta ideal.'
+                },
+                solutions: {
+                    en: 'No action needed. Your URL is working correctly.',
+                    es: 'No se requiere acción. Tu URL funciona correctamente.'
+                }
+            },
+            301: {
+                name: 'Moved Permanently',
+                desc: {
+                    en: 'The requested resource has been permanently moved to a new URL.',
+                    es: 'El recurso solicitado se ha movido permanentemente a una nueva URL.'
+                },
+                problems: {
+                    en: 'May cause SEO issues if not handled properly. Search engines will index the new URL.',
+                    es: 'Puede causar problemas de SEO si no se maneja correctamente. Los motores de búsqueda indexarán la nueva URL.'
+                },
+                solutions: {
+                    en: 'Update your links to point to the new URL. Verify redirect chain is not too long.',
+                    es: 'Actualiza tus enlaces para apuntar a la nueva URL. Verifica que la cadena de redirección no sea demasiado larga.'
+                }
+            },
+            302: {
+                name: 'Found (Temporary Redirect)',
+                desc: {
+                    en: 'The resource is temporarily located at a different URL.',
+                    es: 'El recurso está temporalmente ubicado en una URL diferente.'
+                },
+                problems: {
+                    en: 'Search engines may not pass full link equity. Can cause confusion about canonical URL.',
+                    es: 'Los motores de búsqueda pueden no pasar el valor completo del enlace. Puede causar confusión sobre la URL canónica.'
+                },
+                solutions: {
+                    en: 'Use 301 redirect for permanent moves. Ensure temporary redirects are actually temporary.',
+                    es: 'Usa redirección 301 para movimientos permanentes. Asegúrate que las redirecciones temporales sean realmente temporales.'
+                }
+            },
+            400: {
+                name: 'Bad Request',
+                desc: {
+                    en: 'The server cannot process the request due to client error.',
+                    es: 'El servidor no puede procesar la solicitud debido a un error del cliente.'
+                },
+                problems: {
+                    en: 'Malformed request syntax, invalid request message, or deceptive request routing.',
+                    es: 'Sintaxis de solicitud malformada, mensaje de solicitud inválido o enrutamiento de solicitud engañoso.'
+                },
+                solutions: {
+                    en: 'Check URL format, query parameters, and request headers. Verify API payload if using POST/PUT.',
+                    es: 'Verifica el formato de URL, parámetros de consulta y encabezados de solicitud. Verifica la carga útil de API si usas POST/PUT.'
+                }
+            },
+            401: {
+                name: 'Unauthorized',
+                desc: {
+                    en: 'Authentication is required and has failed or not been provided.',
+                    es: 'Se requiere autenticación y ha fallado o no se ha proporcionado.'
+                },
+                problems: {
+                    en: 'Missing or invalid authentication credentials. Token may be expired.',
+                    es: 'Credenciales de autenticación faltantes o inválidas. El token puede haber expirado.'
+                },
+                solutions: {
+                    en: 'Provide valid credentials, refresh authentication token, or check API key validity.',
+                    es: 'Proporciona credenciales válidas, actualiza el token de autenticación o verifica la validez de la clave API.'
+                }
+            },
+            403: {
+                name: 'Forbidden',
+                desc: {
+                    en: 'Server understood the request but refuses to authorize it.',
+                    es: 'El servidor entendió la solicitud pero se niega a autorizarla.'
+                },
+                problems: {
+                    en: 'Insufficient permissions, IP blocked, or resource requires special access.',
+                    es: 'Permisos insuficientes, IP bloqueada o el recurso requiere acceso especial.'
+                },
+                solutions: {
+                    en: 'Check user permissions, verify IP whitelist, contact site administrator for access.',
+                    es: 'Verifica permisos de usuario, verifica lista blanca de IP, contacta al administrador del sitio para acceso.'
+                }
+            },
+            404: {
+                name: 'Not Found',
+                desc: {
+                    en: 'The requested resource could not be found on the server.',
+                    es: 'El recurso solicitado no se pudo encontrar en el servidor.'
+                },
+                problems: {
+                    en: 'Broken link, deleted page, incorrect URL, or typo in the address.',
+                    es: 'Enlace roto, página eliminada, URL incorrecta o error tipográfico en la dirección.'
+                },
+                solutions: {
+                    en: 'Verify URL spelling, check if page was moved, update broken links, implement 301 redirects for moved content.',
+                    es: 'Verifica ortografía de URL, verifica si la página fue movida, actualiza enlaces rotos, implementa redirecciones 301 para contenido movido.'
+                }
+            },
+            500: {
+                name: 'Internal Server Error',
+                desc: {
+                    en: 'The server encountered an unexpected condition that prevented it from fulfilling the request.',
+                    es: 'El servidor encontró una condición inesperada que le impidió cumplir la solicitud.'
+                },
+                problems: {
+                    en: 'Server-side script error, database connection failed, or server misconfiguration.',
+                    es: 'Error de script del lado del servidor, fallo de conexión a base de datos o configuración incorrecta del servidor.'
+                },
+                solutions: {
+                    en: 'Check server logs, verify database connectivity, review recent code changes, contact hosting provider.',
+                    es: 'Verifica registros del servidor, verifica conectividad de base de datos, revisa cambios recientes de código, contacta proveedor de hosting.'
+                }
+            },
+            502: {
+                name: 'Bad Gateway',
+                desc: {
+                    en: 'The server received an invalid response from an upstream server.',
+                    es: 'El servidor recibió una respuesta inválida de un servidor upstream.'
+                },
+                problems: {
+                    en: 'Upstream server down, network issues, or proxy misconfiguration.',
+                    es: 'Servidor upstream caído, problemas de red o configuración incorrecta del proxy.'
+                },
+                solutions: {
+                    en: 'Check upstream server status, verify proxy configuration, restart web server, check firewall rules.',
+                    es: 'Verifica estado del servidor upstream, verifica configuración del proxy, reinicia servidor web, verifica reglas del firewall.'
+                }
+            },
+            503: {
+                name: 'Service Unavailable',
+                desc: {
+                    en: 'The server is temporarily unable to handle the request.',
+                    es: 'El servidor no puede manejar temporalmente la solicitud.'
+                },
+                problems: {
+                    en: 'Server maintenance, overloaded server, or DDoS attack.',
+                    es: 'Mantenimiento del servidor, servidor sobrecargado o ataque DDoS.'
+                },
+                solutions: {
+                    en: 'Wait and retry, check server capacity, implement load balancing, enable caching.',
+                    es: 'Espera y reintenta, verifica capacidad del servidor, implementa balanceo de carga, habilita caché.'
+                }
+            },
+            504: {
+                name: 'Gateway Timeout',
+                desc: {
+                    en: 'The server did not receive a timely response from an upstream server.',
+                    es: 'El servidor no recibió una respuesta oportuna de un servidor upstream.'
+                },
+                problems: {
+                    en: 'Slow upstream server, network congestion, or timeout settings too low.',
+                    es: 'Servidor upstream lento, congestión de red o configuración de tiempo de espera demasiado baja.'
+                },
+                solutions: {
+                    en: 'Increase timeout settings, optimize upstream server performance, check network connectivity.',
+                    es: 'Aumenta configuración de tiempo de espera, optimiza rendimiento del servidor upstream, verifica conectividad de red.'
+                }
+            }
+        };
+
+        // ==================== STATE ====================
+        let currentLanguage = 'en';
         let currentUser = null;
-        let currentPlan = 'free';
-        let userUUID = null;
         let userToken = null;
         let favorites = [];
         let lastResults = [];
-        let rateLimitInfo = JSON.parse(localStorage.getItem('urlstatuschecker-rate-limit') || '{"count": 0, "resetTime": 0}');
-        let autoCheckInProgress = false;
+        let currentPlan = 'free';
+        let rateLimit = { count: 0, resetTime: 0 };
 
-        // Plan limits
         const planLimits = {
             free: { checksPerDay: 4, urlsPerCheck: 100, maxFavorites: 100 },
             pro: { checksPerDay: -1, urlsPerCheck: 100, maxFavorites: 1000 },
             business: { checksPerDay: -1, urlsPerCheck: 500, maxFavorites: -1 }
         };
 
-        // Cookie utilities
-        function setCookie(name, value, days = 365) {
-            const expires = new Date();
-            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Strict; Secure`;
-        }
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeLanguage();
+            initializeEventListeners();
+            initializeGoogleAuth();
+            loadRateLimitFromStorage();
+            checkExistingSession();
+            updateURLCounter();
+        });
 
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let c of ca) {
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        function initializeLanguage() {
+            // Detect browser language
+            const browserLang = navigator.language.split('-')[0];
+            if (browserLang === 'es') {
+                currentLanguage = 'es';
+                document.getElementById('language-selector').value = 'es';
+                document.documentElement.lang = 'es';
             }
-            return null;
+            applyTranslations();
         }
 
-        function deleteCookie(name) {
-            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-        }
+        function applyTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLanguage][key]) {
+                    el.textContent = translations[currentLanguage][key];
+                }
+            });
 
-        // UUID generation
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0;
-                const v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLanguage][key]) {
+                    el.placeholder = translations[currentLanguage][key];
+                }
             });
         }
 
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-            checkExistingSession();
-            updateRateLimitDisplay();
-            updateFavoritesDisplay();
-        });
+        function initializeEventListeners() {
+            document.getElementById('language-selector').addEventListener('change', (e) => {
+                currentLanguage = e.target.value;
+                document.documentElement.lang = currentLanguage;
+                applyTranslations();
+                // Re-render results if they exist
+                if (lastResults.length > 0) {
+                    displayResults(lastResults);
+                }
+            });
 
-        function initializeApp() {
-            // Set up event listeners
-            document.getElementById('check-urls').addEventListener('click', checkUrls);
-            document.getElementById('clear-input').addEventListener('click', clearInput);
-            document.getElementById('clear-results').addEventListener('click', clearResults);
-            document.getElementById('export-results').addEventListener('click', exportResults);
+            document.getElementById('url-input').addEventListener('input', updateURLCounter);
+            document.getElementById('check-btn').addEventListener('click', checkURLs);
+            document.getElementById('clear-btn').addEventListener('click', clearInput);
+            document.getElementById('load-examples-btn').addEventListener('click', loadExamples);
+            document.getElementById('export-csv-btn').addEventListener('click', exportToCSV);
             document.getElementById('sign-in-btn').addEventListener('click', signIn);
-            document.getElementById('check-all-favorites').addEventListener('click', checkAllFavorites);
-            document.getElementById('upgrade-plan-btn').addEventListener('click', showPricingModal);
-
-            // URL input counter
-            const urlInput = document.getElementById('url-input');
-            urlInput.addEventListener('input', updateUrlCount);
-
-            // File upload functionality
-            const fileUploadArea = document.getElementById('file-upload-area');
-            const fileInput = document.getElementById('file-input');
-
-            if (fileUploadArea && fileInput) {
-                fileUploadArea.addEventListener('click', () => fileInput.click());
-
-                fileUploadArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    fileUploadArea.classList.add('border-snapit-magenta', 'bg-pink-50');
-                });
-
-                fileUploadArea.addEventListener('dragleave', () => {
-                    fileUploadArea.classList.remove('border-snapit-magenta', 'bg-pink-50');
-                });
-
-                fileUploadArea.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    fileUploadArea.classList.remove('border-snapit-magenta', 'bg-pink-50');
-                    const file = e.dataTransfer.files[0];
-                    if (file) handleFileUpload(file);
-                });
-
-                fileInput.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-                    if (file) handleFileUpload(file);
-                });
-            }
-
-            // Initialize Google Sign-In
-            initializeGoogleSignIn();
         }
 
-        // Update URL count
-        function updateUrlCount() {
-            const input = document.getElementById('url-input').value.trim();
-            const urls = input.split('\n').filter(url => url.trim().length > 0);
-            const count = urls.length;
-            const maxUrls = planLimits[currentPlan].urlsPerCheck;
-
-            const countEl = document.getElementById('url-count');
-            countEl.textContent = count + ' / ' + maxUrls + ' URLs';
-
-            if (count > maxUrls) {
-                countEl.classList.add('text-red-600', 'font-bold');
-            } else if (count > maxUrls * 0.8) {
-                countEl.classList.remove('text-red-600');
-                countEl.classList.add('text-yellow-600', 'font-bold');
-            } else {
-                countEl.classList.remove('text-red-600', 'text-yellow-600', 'font-bold');
-            }
-        }
-
-        // Load example URLs
-        function loadExampleUrls() {
-            const examples = [
-                'https://google.com',
-                'https://github.com',
-                'https://stackoverflow.com',
-                'https://amazon.com',
-                'https://youtube.com'
-            ].join('\n');
-
-            document.getElementById('url-input').value = examples;
-            updateUrlCount();
-            showToast('Example URLs loaded!', 'success');
-        }
-
-        // Handle file upload
-        function handleFileUpload(file) {
-            const validTypes = ['text/plain', 'text/csv', 'application/vnd.ms-excel'];
-            if (!validTypes.includes(file.type) && !file.name.endsWith('.txt') && !file.name.endsWith('.csv')) {
-                showToast('Please upload a TXT or CSV file', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const content = e.target.result;
-                const urls = content.split(/[\n,]/).map(u => u.trim()).filter(u => u.length > 0);
-
-                document.getElementById('url-input').value = urls.join('\n');
-                updateUrlCount();
-                showToast('File uploaded! ' + urls.length + ' URLs loaded.', 'success');
-            };
-
-            reader.onerror = () => {
-                showToast('Error reading file', 'error');
-            };
-
-            reader.readAsText(file);
-        }
-
-        // Load favorites into input
-        function loadFavoritesIntoInput() {
-            if (favorites.length === 0) {
-                showToast('No favorites to load', 'info');
-                return;
-            }
-
-            document.getElementById('url-input').value = favorites.join('\n');
-            updateUrlCount();
-            showToast('Favorites loaded! (' + favorites.length + ' URLs)', 'success');
-        }
-        
-        async function checkExistingSession() {
-            const savedToken = localStorage.getItem('urlstatuschecker-token');
-            const savedUser = localStorage.getItem('urlstatuschecker-user');
-            
-            if (savedToken && savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    userToken = savedToken;
-                    userUUID = currentUser.userId;
-                    
-                    // Try to load favorites to verify token is valid
-                    const testResponse = await fetch(API_BASE + '/favorites', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${userToken}`
-                        }
-                    });
-                    
-                    if (testResponse.ok || testResponse.status === 401) {
-                        // Even if unauthorized, we can try to authenticate again
-                        updateAuthDisplay();
-                        await loadUserFavorites();
-                        
-                        // Show welcome back message
-                        const statusEl = document.getElementById('status-message');
-                        statusEl.innerHTML = '<span class="text-blue-600">👋 Welcome back, ' + currentUser.name + '! Your data is synced from the cloud.</span>';
-                        
-                        // Auto-check favorites after 2 seconds if user has any
-                        setTimeout(() => {
-                            if (favorites.length > 0 && !autoCheckInProgress) {
-                                autoCheckFavoritesOnLoad();
-                            } else {
-                                statusEl.innerHTML = '<span class="text-gray-600">Ready to check URLs. Your favorites are saved in the cloud!</span>';
-                            }
-                        }, 2000);
-                    } else {
-                        // Token expired, clear session
-                        localStorage.removeItem('urlstatuschecker-token');
-                        localStorage.removeItem('urlstatuschecker-user');
-                        currentUser = null;
-                        userToken = null;
-                        userUUID = null;
-                    }
-                    
-                } catch (error) {
-                    console.error('Error restoring session:', error);
-                    localStorage.removeItem('urlstatuschecker-token');
-                    localStorage.removeItem('urlstatuschecker-user');
-                    currentUser = null;
-                    userToken = null;
-                    userUUID = null;
-                }
-            }
-        }
-
-        async function autoCheckFavoritesOnLoad() {
-            if (autoCheckInProgress || favorites.length === 0) return;
-            
-            const rateLimit = checkRateLimit();
-            if (!rateLimit.allowed) return; // Skip auto-check if rate limited
-            
-            autoCheckInProgress = true;
-            const statusEl = document.getElementById('status-message');
-            
-            try {
-                statusEl.innerHTML = '<span class="text-blue-600">🔄 Auto-checking your ' + favorites.length + ' favorites...</span>';
-                
-                const response = await fetch(API_BASE + '/batch/check', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${userToken || 'anonymous'}`,
-                        'X-Platform': 'urlstatuschecker',
-                        'X-Action': 'batch-check'
-                    },
-                    body: JSON.stringify({
-                        urls: favorites,
-                        userId: userUUID,
-                        source: 'favorites-auto-check'
-                    })
-                });
-
-                if (!response.ok) {
-                    if (response.status === 429) {
-                        statusEl.innerHTML = '<span class="text-yellow-600">⚠️ Rate limit reached. Upgrade for more checks.</span>';
-                        showNotification('Daily check limit reached. Upgrade for unlimited monitoring.', 'warning');
-                        return;
-                    } else if (response.status === 403) {
-                        statusEl.innerHTML = '<span class="text-red-600">🔒 Authentication required for batch checking.</span>';
-                        showNotification('Please sign in to check multiple URLs.', 'error');
-                        return;
-                    }
-                    throw new Error(`API Error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                if (data.success && data.results) {
-                    displayResults(data.results);
-                    updateRateLimit();
-                    statusEl.innerHTML = '<span class="text-green-600">✅ Auto-checked ' + data.results.length + ' favorites successfully!</span>';
-
-                    // Show usage info
-                    if (data.usage) {
-                        const remaining = data.usage.remaining;
-                        const limit = data.usage.limit;
-                        if (remaining !== 'unlimited') {
-                            statusEl.innerHTML += ` <span class="text-sm text-gray-500">(${remaining}/${limit} checks remaining today)</span>`;
-                        }
-                    }
-
-                    showNotification('Your favorites have been automatically checked!', 'success');
-                } else {
-                    statusEl.innerHTML = '<span class="text-gray-600">Ready to check URLs</span>';
-                    if (data.error) {
-                        showNotification(data.error, 'error');
-                    }
-                }
-            } catch (error) {
-                console.error('Auto-check failed:', error);
-                statusEl.innerHTML = '<span class="text-gray-600">Ready to check URLs</span>';
-            } finally {
-                autoCheckInProgress = false;
-            }
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
-                type === 'success' ? 'bg-green-100 border border-green-400 text-green-700' :
-                type === 'error' ? 'bg-red-100 border border-red-400 text-red-700' :
-                'bg-blue-100 border border-blue-400 text-blue-700'
-            }`;
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <span class="material-icons mr-2">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
-                    <span>${message}</span>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-500 hover:text-gray-700">
-                        <span class="material-icons">close</span>
-                    </button>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 5000);
-        }
-
-        function initializeGoogleSignIn() {
+        function initializeGoogleAuth() {
             if (typeof google !== 'undefined' && google.accounts) {
                 google.accounts.id.initialize({
                     client_id: GOOGLE_CLIENT_ID,
-                    callback: handleCredentialResponse
+                    callback: handleGoogleAuth
                 });
+            }
+        }
+
+        // ==================== URL COUNTER ====================
+        function updateURLCounter() {
+            const textarea = document.getElementById('url-input');
+            const urls = textarea.value.trim().split('\n').filter(url => url.trim());
+            const count = urls.length;
+
+            const counter = document.getElementById('url-count');
+            const counterDiv = document.getElementById('url-counter');
+
+            counter.textContent = count;
+
+            // Color coding
+            if (count === 0) {
+                counterDiv.className = 'absolute bottom-4 right-4 px-4 py-2 bg-white rounded-lg shadow-md font-bold text-sm';
+                counter.className = 'text-gray-700';
+            } else if (count <= 50) {
+                counterDiv.className = 'absolute bottom-4 right-4 px-4 py-2 bg-green-50 rounded-lg shadow-md font-bold text-sm';
+                counter.className = 'text-green-600';
+            } else if (count <= 80) {
+                counterDiv.className = 'absolute bottom-4 right-4 px-4 py-2 bg-yellow-50 rounded-lg shadow-md font-bold text-sm';
+                counter.className = 'text-yellow-600';
             } else {
-                setTimeout(initializeGoogleSignIn, 100);
+                counterDiv.className = 'absolute bottom-4 right-4 px-4 py-2 bg-red-50 rounded-lg shadow-md font-bold text-sm';
+                counter.className = 'text-red-600';
             }
         }
 
-        function checkRateLimit() {
-            const now = Date.now();
-            const resetTime = 24 * 60 * 60 * 1000; // 24 hours
-            const maxChecks = planLimits[currentPlan].checksPerDay;
-            
-            if (maxChecks === -1) return { allowed: true, remaining: 'unlimited' };
+        // ==================== CHECK URLs ====================
+        async function checkURLs() {
+            const textarea = document.getElementById('url-input');
+            const urls = textarea.value.trim().split('\n')
+                .filter(url => url.trim())
+                .map(url => url.trim());
 
-            if (now > rateLimitInfo.resetTime) {
-                rateLimitInfo = { count: 0, resetTime: now + resetTime };
+            if (urls.length === 0) {
+                showToast('Please enter at least one URL', 'warning');
+                return;
             }
 
-            return {
-                allowed: rateLimitInfo.count < maxChecks,
-                remaining: Math.max(0, maxChecks - rateLimitInfo.count),
-                resetTime: rateLimitInfo.resetTime
-            };
-        }
-
-        function updateRateLimit() {
-            if (planLimits[currentPlan].checksPerDay !== -1) {
-                rateLimitInfo.count++;
-                localStorage.setItem('urlstatuschecker-rate-limit', JSON.stringify(rateLimitInfo));
-            }
-            updateRateLimitDisplay();
-        }
-
-        function updateRateLimitDisplay() {
-            const rateLimit = checkRateLimit();
-            const rateLimitEl = document.getElementById('rate-limit-info');
-            
-            if (rateLimit.remaining === 'unlimited') {
-                rateLimitEl.textContent = 'Unlimited checks';
-            } else {
-                const resetDate = new Date(rateLimitInfo.resetTime);
-                rateLimitEl.textContent = `${rateLimit.remaining} checks remaining (resets ${resetDate.toLocaleDateString()})`;
-            }
-        }
-
-        async function checkUrls() {
-            const input = document.getElementById('url-input').value.trim();
-            
-            if (!input) {
-                showToast('Please enter URLs to check', 'warning');
+            if (urls.length > planLimits[currentPlan].urlsPerCheck) {
+                showToast(`Maximum ${planLimits[currentPlan].urlsPerCheck} URLs per check`, 'warning');
                 return;
             }
 
             // Check rate limit
-            const rateLimit = checkRateLimit();
-            if (!rateLimit.allowed) {
-                const resetDate = new Date(rateLimit.resetTime);
-                showToast(`Daily limit reached (${planLimits[currentPlan].checksPerDay} checks). Upgrade to Pro for unlimited checks!`, 'warning');
+            const rateLimitCheck = checkRateLimit();
+            if (!rateLimitCheck.allowed) {
+                showToast('Daily check limit reached. Upgrade for unlimited checks!', 'warning');
+                showPricingModal();
                 return;
             }
 
-            const urls = input.split('\n')
-                .map(url => url.trim())
-                .filter(url => url.length > 0)
-                .slice(0, planLimits[currentPlan].urlsPerCheck);
-
-            if (urls.length === 0) {
-                showToast('Please enter valid URLs', 'warning');
-                return;
-            }
-
-            const checkButton = document.getElementById('check-urls');
-            checkButton.disabled = true;
-            checkButton.innerHTML = '<span class="material-icons animate-spin">refresh</span> Checking ' + urls.length + ' URLs...';
-
-            const statusEl = document.getElementById('status-message');
-            statusEl.innerHTML = '<span class="text-blue-600">🔍 Checking ' + urls.length + ' URLs...</span>';
+            // Show loading
+            document.getElementById('loading-state').classList.remove('hidden');
+            document.getElementById('results-section').classList.add('hidden');
 
             try {
                 const response = await fetch(API_BASE + '/batch/check', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${userToken || 'anonymous'}`,
-                        'X-Platform': 'urlstatuschecker',
-                        'X-Action': 'batch-check'
+                        'Authorization': `Bearer ${userToken || 'anonymous'}`
                     },
-                    body: JSON.stringify({
-                        urls: urls,
-                        userId: userUUID,
-                        includeDns: true, // Request DNS mapping info
-                        source: 'manual-check'
-                    })
+                    body: JSON.stringify({ urls })
                 });
 
                 if (!response.ok) {
-                    if (response.status === 429) {
-                        statusEl.innerHTML = '<span class="text-yellow-600">⚠️ Rate limit reached. Upgrade for unlimited checks.</span>';
-                        showToast('Daily check limit reached. Upgrade for unlimited monitoring.', 'warning');
-                        return;
-                    } else if (response.status === 403) {
-                        statusEl.innerHTML = '<span class="text-red-600">🔒 Authentication required for bulk checking.</span>';
-                        showToast('Please sign in to check multiple URLs.', 'error');
-                        return;
-                    }
-                    throw new Error('API Error: HTTP ' + response.status);
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
                 const data = await response.json();
-                
-                if (data.success && data.results) {
-                    displayResults(data.results);
-                    statusEl.innerHTML = '<span class="text-green-600">✅ Check completed successfully!</span>';
-                    updateRateLimit();
-                } else {
-                    throw new Error('Invalid API response');
-                }
-                
+                lastResults = data.results || [];
+
+                updateRateLimit();
+                displayResults(lastResults);
+                showToast('URLs checked successfully!', 'success');
+
             } catch (error) {
-                console.error('Error:', error);
-                statusEl.innerHTML = '<span class="text-red-600">⚠ Error: ' + error.message + '</span>';
+                console.error('Check error:', error);
+                showToast('Error checking URLs. Please try again.', 'error');
             } finally {
-                checkButton.disabled = false;
-                checkButton.innerHTML = '<span class="material-icons">search</span> Check URLs Status';
+                document.getElementById('loading-state').classList.add('hidden');
             }
         }
 
-        // Status code definitions and solutions
-        const statusCodeInfo = {
-            200: { name: 'OK', desc: 'Request successful', solution: 'Everything is working correctly!' },
-            201: { name: 'Created', desc: 'Resource created successfully', solution: 'New resource created successfully.' },
-            204: { name: 'No Content', desc: 'Success, but no content to return', solution: 'Request succeeded with no response body.' },
-            301: { name: 'Moved Permanently', desc: 'URL permanently redirected', solution: 'Update your links to the new URL.' },
-            302: { name: 'Found', desc: 'Temporary redirect', solution: 'The resource temporarily moved to another URL.' },
-            304: { name: 'Not Modified', desc: 'Cached version is still valid', solution: 'Use cached version - no changes detected.' },
-            400: { name: 'Bad Request', desc: 'Invalid request syntax', solution: 'Check URL formatting and parameters.' },
-            401: { name: 'Unauthorized', desc: 'Authentication required', solution: 'Provide valid credentials or API key.' },
-            403: { name: 'Forbidden', desc: 'Access denied', solution: 'You lack permission. Check authorization.' },
-            404: { name: 'Not Found', desc: 'Resource does not exist', solution: 'Verify URL spelling and path. Resource may have been removed.' },
-            405: { name: 'Method Not Allowed', desc: 'HTTP method not supported', solution: 'Use GET, POST, or another allowed method.' },
-            408: { name: 'Request Timeout', desc: 'Server timeout waiting for request', solution: 'Retry request. Check network connection.' },
-            429: { name: 'Too Many Requests', desc: 'Rate limit exceeded', solution: 'Wait before retrying. Implement rate limiting.' },
-            500: { name: 'Internal Server Error', desc: 'Server encountered an error', solution: 'Contact site administrator. Try again later.' },
-            502: { name: 'Bad Gateway', desc: 'Invalid response from upstream', solution: 'Server communication issue. Retry shortly.' },
-            503: { name: 'Service Unavailable', desc: 'Server temporarily unavailable', solution: 'Server overloaded or under maintenance. Try later.' },
-            504: { name: 'Gateway Timeout', desc: 'Upstream server timeout', solution: 'Server taking too long to respond. Retry.' }
-        };
-
-        function getStatusCodeInfo(code) {
-            return statusCodeInfo[code] || {
-                name: 'Unknown',
-                desc: 'Status code not recognized',
-                solution: 'Check server documentation for this status code.'
-            };
-        }
-
+        // ==================== DISPLAY RESULTS ====================
         function displayResults(results) {
-            lastResults = results;
-            const resultsSection = document.getElementById('results-section');
-            const resultsList = document.getElementById('results-list');
-            const resultsSummary = document.getElementById('results-summary');
+            document.getElementById('results-section').classList.remove('hidden');
 
             // Calculate summary
             const total = results.length;
             const successful = results.filter(r => r.statusCode >= 200 && r.statusCode < 400).length;
             const failed = total - successful;
-            const avgResponseTime = Math.round(results.reduce((sum, r) => sum + (r.responseTime || 0), 0) / total);
+            const avgTime = Math.round(results.reduce((sum, r) => sum + (r.responseTime || 0), 0) / total);
 
-            // Display summary with animations
-            resultsSummary.innerHTML =
-                '<div class="bg-gradient-to-br from-green-50 to-green-100 border border-green-300 rounded-xl p-5 text-center shadow-md animate-scaleIn">' +
-                    '<span class="material-icons text-green-600 text-3xl">check_circle</span>' +
-                    '<div class="text-3xl font-bold text-green-700 mt-2">' + successful + '</div>' +
-                    '<div class="text-sm text-green-600 font-medium">Online</div>' +
-                '</div>' +
-                '<div class="bg-gradient-to-br from-red-50 to-red-100 border border-red-300 rounded-xl p-5 text-center shadow-md animate-scaleIn" style="animation-delay: 0.1s;">' +
-                    '<span class="material-icons text-red-600 text-3xl">error</span>' +
-                    '<div class="text-3xl font-bold text-red-700 mt-2">' + failed + '</div>' +
-                    '<div class="text-sm text-red-600 font-medium">Offline</div>' +
-                '</div>' +
-                '<div class="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-300 rounded-xl p-5 text-center shadow-md animate-scaleIn" style="animation-delay: 0.2s;">' +
-                    '<span class="material-icons text-blue-600 text-3xl">language</span>' +
-                    '<div class="text-3xl font-bold text-blue-700 mt-2">' + total + '</div>' +
-                    '<div class="text-sm text-blue-600 font-medium">Total Checked</div>' +
-                '</div>' +
-                '<div class="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-300 rounded-xl p-5 text-center shadow-md animate-scaleIn" style="animation-delay: 0.3s;">' +
-                    '<span class="material-icons text-purple-600 text-3xl">speed</span>' +
-                    '<div class="text-3xl font-bold text-purple-700 mt-2">' + avgResponseTime + '</div>' +
-                    '<div class="text-sm text-purple-600 font-medium">Avg. Time (ms)</div>' +
-                '</div>';
+            // Display summary cards
+            const summary = document.getElementById('results-summary');
+            summary.innerHTML = `
+                <div class="glass rounded-2xl p-6 text-center border border-green-200 animate-scale-in">
+                    <span class="material-icons text-green-500 text-5xl mb-3">check_circle</span>
+                    <div class="text-4xl font-bold text-green-600">${successful}</div>
+                    <div class="text-sm font-medium text-gray-600" data-i18n="online">Online</div>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center border border-red-200 animate-scale-in" style="animation-delay: 0.1s;">
+                    <span class="material-icons text-red-500 text-5xl mb-3">error</span>
+                    <div class="text-4xl font-bold text-red-600">${failed}</div>
+                    <div class="text-sm font-medium text-gray-600" data-i18n="offline">Offline</div>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center border border-blue-200 animate-scale-in" style="animation-delay: 0.2s;">
+                    <span class="material-icons text-blue-500 text-5xl mb-3">language</span>
+                    <div class="text-4xl font-bold text-blue-600">${total}</div>
+                    <div class="text-sm font-medium text-gray-600" data-i18n="total-checked">Total Checked</div>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center border border-purple-200 animate-scale-in" style="animation-delay: 0.3s;">
+                    <span class="material-icons text-purple-500 text-5xl mb-3">speed</span>
+                    <div class="text-4xl font-bold text-purple-600">${avgTime}</div>
+                    <div class="text-sm font-medium text-gray-600" data-i18n="avg-time">Avg. Time (ms)</div>
+                </div>
+            `;
 
-            // Display detailed results with expandable cards
+            // Apply translations to summary
+            applyTranslations();
+
+            // Display individual results
+            const resultsList = document.getElementById('results-list');
             resultsList.innerHTML = results.map((result, index) => {
                 const isSuccess = result.statusCode >= 200 && result.statusCode < 400;
-                const statusColor = isSuccess ? 'text-green-600' : 'text-red-600';
-                const bgColor = isSuccess ? 'bg-green-50' : 'bg-red-50';
-                const borderColor = isSuccess ? 'border-green-200' : 'border-red-200';
                 const url = result.url || result.fullUrl;
                 const isFavorite = favorites.includes(url);
-                const info = getStatusCodeInfo(result.statusCode);
-                const uniqueId = 'result-' + index;
+                const statusInfo = statusCodeDatabase[result.statusCode] || {
+                    name: 'Unknown',
+                    desc: { en: 'Status code not documented', es: 'Código de estado no documentado' },
+                    problems: { en: 'Unknown', es: 'Desconocido' },
+                    solutions: { en: 'Contact website administrator', es: 'Contacta al administrador del sitio' }
+                };
 
-                return '<div class="border-2 ' + borderColor + ' rounded-xl p-5 ' + bgColor + ' hover:shadow-lg transition-all animate-fadeIn" style="animation-delay: ' + (index * 0.05) + 's;">' +
-                        '<div class="flex items-start justify-between gap-4">' +
-                            '<div class="flex-1 min-w-0">' +
-                                '<div class="flex items-center gap-3 mb-2">' +
-                                    '<button onclick="toggleFavorite(\'' + encodeURIComponent(url) + '\')" class="favorite-btn transform hover:scale-125 transition-transform" title="' + (isFavorite ? 'Remove from favorites' : 'Add to favorites') + '">' +
-                                        '<span class="material-icons text-2xl ' + (isFavorite ? 'text-yellow-500' : 'text-gray-400') + '">' +
-                                        (isFavorite ? 'star' : 'star_border') +
-                                        '</span>' +
-                                    '</button>' +
-                                    '<a href="' + url + '" target="_blank" class="font-semibold text-gray-900 hover:text-snapit-magenta break-all transition-colors">' + url + '</a>' +
-                                '</div>' +
+                return `
+                    <div class="glass rounded-2xl p-6 border ${isSuccess ? 'border-green-200' : 'border-red-200'} hover:shadow-xl transition-all animate-fade-in" style="animation-delay: ${index * 0.05}s;">
+                        <div class="flex items-start justify-between gap-4 mb-4">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <button onclick="toggleFavorite('${encodeURIComponent(url)}')" class="transform hover:scale-125 transition-transform">
+                                        <span class="material-icons text-2xl ${isFavorite ? 'text-yellow-500' : 'text-gray-400'}">${isFavorite ? 'star' : 'star_border'}</span>
+                                    </button>
+                                    <a href="${url}" target="_blank" class="text-lg font-semibold text-gray-900 hover:text-primary break-all">${url}</a>
+                                </div>
 
-                                '<div class="flex flex-wrap items-center gap-3 ml-11">' +
-                                    '<button onclick="toggleDetails(\'' + uniqueId + '\')" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium ' + statusColor + ' bg-white border-2 ' + borderColor + ' hover:shadow-md transition-all">' +
-                                        '<span class="font-bold">' + result.statusCode + '</span>' +
-                                        '<span class="text-xs">' + info.name + '</span>' +
-                                        '<span class="material-icons text-sm" id="arrow-' + uniqueId + '">expand_more</span>' +
-                                    '</button>' +
+                                <div class="flex flex-wrap items-center gap-3 ml-11">
+                                    <button onclick="toggleDetails('details-${index}')" class="status-badge inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold ${isSuccess ? 'bg-green-100 text-green-700 border-2 border-green-300' : 'bg-red-100 text-red-700 border-2 border-red-300'} hover:shadow-lg">
+                                        <span class="text-xl">${result.statusCode}</span>
+                                        <span class="text-sm">${statusInfo.name}</span>
+                                        <span class="material-icons text-sm" id="arrow-details-${index}">expand_more</span>
+                                    </button>
 
-                                    '<span class="inline-flex items-center gap-1 text-sm text-gray-600">' +
-                                        '<span class="material-icons text-sm">schedule</span>' +
-                                        (result.responseTime || 0) + ' ms' +
-                                    '</span>' +
+                                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-xl text-sm font-medium text-gray-700">
+                                        <span class="material-icons text-sm">schedule</span>
+                                        ${result.responseTime || 0} ms
+                                    </span>
 
-                                    '<button onclick="checkGlobalDns(\'' + encodeURIComponent(url) + '\')" class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 hover:shadow-md transition-all">' +
-                                        '<span class="material-icons text-sm">dns</span>' +
-                                        'DNS Check' +
-                                    '</button>' +
-                                '</div>' +
+                                    <button onclick="openDNSChecker('${encodeURIComponent(url)}')" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-xl text-sm font-bold hover:bg-blue-600 hover:shadow-lg transition-all">
+                                        <span class="material-icons text-sm">dns</span>
+                                        <span data-i18n="check-dns">Check DNS</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-                                // Expandable details section
-                                '<div id="' + uniqueId + '" class="hidden mt-4 ml-11 p-4 bg-white rounded-lg border-2 border-gray-200 animate-fadeIn">' +
-                                    '<h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">' +
-                                        '<span class="material-icons text-snapit-magenta">info</span>' +
-                                        'Status Code Information' +
-                                    '</h4>' +
-                                    '<div class="space-y-2 text-sm">' +
-                                        '<div class="flex gap-2">' +
-                                            '<span class="font-medium text-gray-700">Code:</span>' +
-                                            '<span class="text-gray-900">' + result.statusCode + ' - ' + info.name + '</span>' +
-                                        '</div>' +
-                                        '<div class="flex gap-2">' +
-                                            '<span class="font-medium text-gray-700">Description:</span>' +
-                                            '<span class="text-gray-900">' + info.desc + '</span>' +
-                                        '</div>' +
-                                        '<div class="flex gap-2">' +
-                                            '<span class="font-medium text-gray-700">Solution:</span>' +
-                                            '<span class="text-gray-900">' + info.solution + '</span>' +
-                                        '</div>' +
-                                        '<div class="flex gap-2">' +
-                                            '<span class="font-medium text-gray-700">Response Time:</span>' +
-                                            '<span class="text-gray-900">' + (result.responseTime || 0) + ' ms</span>' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>';
+                        <!-- Expandable Details -->
+                        <div id="details-${index}" class="hidden ml-11 mt-4 p-6 bg-white rounded-xl border-2 border-indigo-100 animate-fade-in">
+                            <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span class="material-icons text-primary">info</span>
+                                <span data-i18n="status-code">Status Code</span>: ${result.statusCode} - ${statusInfo.name}
+                            </h4>
+                            <div class="space-y-4 text-sm">
+                                <div>
+                                    <span class="font-bold text-gray-700" data-i18n="description">Description</span>
+                                    <p class="text-gray-600 mt-1">${statusInfo.desc[currentLanguage]}</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-yellow-700" data-i18n="possible-problems">Possible Problems</span>
+                                    <p class="text-gray-600 mt-1">${statusInfo.problems[currentLanguage]}</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-green-700" data-i18n="solutions">Solutions</span>
+                                    <p class="text-gray-600 mt-1">${statusInfo.solutions[currentLanguage]}</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-gray-700" data-i18n="response-time">Response Time</span>
+                                    <p class="text-gray-600 mt-1">${result.responseTime || 0} ms</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }).join('');
 
-            resultsSection.classList.remove('hidden');
-            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            // Apply translations
+            applyTranslations();
+
+            // Scroll to results
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // Toggle expandable details
         function toggleDetails(elementId) {
             const details = document.getElementById(elementId);
             const arrow = document.getElementById('arrow-' + elementId);
@@ -933,189 +855,47 @@ https://github.com"
             }
         }
 
-        // Toggle favorite with animation
+        // ==================== DNS CHECKER ====================
+        function openDNSChecker(encodedUrl) {
+            const url = decodeURIComponent(encodedUrl);
+            const domain = new URL(url).hostname;
+            window.open(`/dns-propagation.html?domain=${encodeURIComponent(domain)}`, '_blank', 'width=1200,height=800');
+        }
+
+        // ==================== FAVORITES ====================
         async function toggleFavorite(encodedUrl) {
             const url = decodeURIComponent(encodedUrl);
-            const isFavorite = favorites.includes(url);
 
             if (!currentUser) {
-                showToast('Please sign in to add favorites', 'info');
+                showToast(translations[currentLanguage]['sign-in-favorites'], 'info');
                 signIn();
                 return;
             }
 
-            if (isFavorite) {
-                await removeFromFavorites(url);
-            } else {
-                await addToFavorites(url);
-            }
-
-            // Re-render results to update star icons
-            displayResults(lastResults);
-        }
-
-        function signIn() {
-            if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-                google.accounts.id.prompt();
-            } else {
-                showToast('Google Sign-In is loading. Please try again in a moment.', 'info');
-            }
-        }
-
-        async function handleCredentialResponse(response) {
-            try {
-                console.log('URLStatusChecker authentication starting...');
-
-                // Use auth.urlstatuschecker.com for authentication
-                const authResponse = await fetch('https://auth.urlstatuschecker.com/auth/google', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Origin': 'https://urlstatuschecker.com'
-                    },
-                    body: JSON.stringify({
-                        credential: response.credential,
-                        idToken: response.credential,
-                        source: 'urlstatuschecker'
-                    })
-                });
-
-                const authData = await authResponse.json();
-
-                if (authData.success) {
-                    currentUser = authData.user;
-                    userToken = authData.token;
-                    userUUID = currentUser.userId;
-
-                    // Save token in localStorage (not sensitive data in cookies)
-                    localStorage.setItem('urlstatuschecker-token', userToken);
-                    localStorage.setItem('urlstatuschecker-user', JSON.stringify(currentUser));
-
-                    updateAuthDisplay();
-                    await loadUserFavorites();
-                    showNotification('Welcome ' + currentUser.name + '! Your data is now synced to the cloud.', 'success');
-                    
-                    // Auto-check favorites after sign in
-                    setTimeout(() => {
-                        if (favorites.length > 0) {
-                            autoCheckFavoritesOnLoad();
-                        }
-                    }, 1500);
-                } else {
-                    throw new Error('Authentication failed');
-                }
-                
-            } catch (error) {
-                console.error('Authentication failed:', error);
-                showNotification('Authentication failed. Please try again.', 'error');
-            }
-        }
-
-        function updateAuthDisplay() {
-            const authSection = document.getElementById('auth-section');
-            const fileUploadArea = document.getElementById('file-upload-area');
-            const loadFavoritesBtn = document.getElementById('load-favorites-btn');
-
-            if (currentUser) {
-                authSection.innerHTML =
-                    '<div class="flex items-center gap-3">' +
-                        '<img src="' + currentUser.picture + '" alt="Profile" class="w-8 h-8 rounded-full shadow-md">' +
-                        '<span class="text-sm font-medium text-gray-700">' + currentUser.name + '</span>' +
-                        '<button onclick="showDashboard()" class="text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1.5 rounded-lg hover:shadow-md transition-all">Dashboard</button>' +
-                        '<button onclick="signOut()" class="text-sm text-gray-500 hover:text-gray-700">Sign Out</button>' +
-                    '</div>';
-
-                // Show file upload for signed-in users
-                if (fileUploadArea) fileUploadArea.classList.remove('hidden');
-
-                // Show load favorites button if user has favorites
-                if (loadFavoritesBtn && favorites.length > 0) {
-                    loadFavoritesBtn.classList.remove('hidden');
-                }
-            } else {
-                authSection.innerHTML =
-                    '<button id="sign-in-btn" onclick="signIn()" ' +
-                            'class="bg-gradient-to-r from-snapit-magenta to-pink-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105">' +
-                        '<span class="material-icons text-sm mr-1">login</span>' +
-                        'Sign In' +
-                    '</button>';
-
-                // Hide file upload for anonymous users
-                if (fileUploadArea) fileUploadArea.classList.add('hidden');
-                if (loadFavoritesBtn) loadFavoritesBtn.classList.add('hidden');
-            }
-        }
-
-        function signOut() {
-            // Clear all user data
-            localStorage.removeItem('urlstatuschecker-token');
-            localStorage.removeItem('urlstatuschecker-user');
-            
-            currentUser = null;
-            userToken = null;
-            userUUID = null;
-            favorites = [];
-            autoCheckInProgress = false;
-            
-            updateAuthDisplay();
-            updateFavoritesDisplay();
-            showMainView();
-            
-            showNotification('Signed out successfully. Your favorites are safely stored in the cloud!', 'info');
-        }
-
-        function showDashboard() {
-            if (!currentUser) {
-                showToast('Please sign in first', 'warning');
-                return;
-            }
-            
-            document.getElementById('user-dashboard').classList.remove('hidden');
-            document.getElementById('url-input-section').classList.add('hidden');
-            document.getElementById('dashboard-welcome').textContent = 
-                'Welcome back, ' + currentUser.name + '! Manage your favorite URLs and check them instantly.';
-            
-            updateFavoritesDisplay();
-        }
-
-        function showMainView() {
-            document.getElementById('user-dashboard').classList.add('hidden');
-            document.getElementById('url-input-section').classList.remove('hidden');
-        }
-
-        // Generate dynamic favorite button based on current state
-        function generateFavoriteButton(url) {
             const isFavorite = favorites.includes(url);
-            
-            if (isFavorite) {
-                return '<button onclick="removeFromFavorites(\'' + url + '\')" id="fav-btn-' + btoa(url).replace(/[^a-zA-Z0-9]/g, '') + '" ' +
-                       'class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors">' +
-                       '<span class="material-icons text-xs">favorite</span> Remove from Favorites' +
-                       '</button>';
-            } else {
-                return '<button onclick="addToFavorites(\'' + url + '\')" id="fav-btn-' + btoa(url).replace(/[^a-zA-Z0-9]/g, '') + '" ' +
-                       'class="text-sm bg-snapit-magenta text-white px-3 py-1 rounded hover:bg-opacity-90 transition-colors">' +
-                       '<span class="material-icons text-xs">favorite_border</span> Add to Favorites' +
-                       '</button>';
-            }
-        }
 
-        async function addToFavorites(url) {
-            if (!currentUser || !userToken) {
-                showToast('Please sign in to add favorites', 'warning');
-                return;
-            }
+            try {
+                if (isFavorite) {
+                    // Remove favorite
+                    await fetch(API_BASE + '/favorites', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${userToken}`
+                        },
+                        body: JSON.stringify({ url })
+                    });
+                    favorites = favorites.filter(f => f !== url);
+                    showToast('Removed from favorites', 'success');
+                } else {
+                    // Add favorite
+                    if (favorites.length >= planLimits[currentPlan].maxFavorites && planLimits[currentPlan].maxFavorites !== -1) {
+                        showToast(`Maximum ${planLimits[currentPlan].maxFavorites} favorites reached. Upgrade for more!`, 'warning');
+                        showPricingModal();
+                        return;
+                    }
 
-            const maxFavorites = planLimits[currentPlan].maxFavorites;
-            if (maxFavorites !== -1 && favorites.length >= maxFavorites) {
-                showToast(`You've reached the limit of ${maxFavorites} favorites. Upgrade your plan for more!`, 'warning');
-                showPricingModal();
-                return;
-            }
-
-            if (!favorites.includes(url)) {
-                try {
-                    const response = await fetch(API_BASE + '/favorites', {
+                    await fetch(API_BASE + '/favorites', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1123,790 +903,329 @@ https://github.com"
                         },
                         body: JSON.stringify({ url })
                     });
-
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        favorites.push(url);
-                        updateFavoritesDisplay();
-                        updateFavoriteButton(url);
-                        showToast('Added to favorites!', 'success');
-                    } else {
-                        showToast('Failed to add favorite', 'error');
-                    }
-                } catch (error) {
-                    console.error('Add favorite error:', error);
-                    showToast('Failed to add favorite', 'error');
+                    favorites.push(url);
+                    showToast('Added to favorites', 'success');
                 }
-            } else {
-                showToast('URL already in favorites', 'info');
-            }
-        }
 
-        async function removeFromFavorites(url) {
-            if (!userToken) {
-                favorites = favorites.filter(fav => fav !== url);
-                updateFavoritesDisplay();
-                updateFavoriteButton(url);
-                showToast('Removed from favorites!', 'success');
-                return;
-            }
-
-            try {
-                const response = await fetch(API_BASE + '/favorites', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${userToken}`
-                    },
-                    body: JSON.stringify({ url })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    favorites = favorites.filter(fav => fav !== url);
-                    updateFavoritesDisplay();
-                    updateFavoriteButton(url);
-                    showToast('Removed from favorites!', 'success');
-                } else {
-                    showToast('Failed to remove favorite', 'error');
+                // Re-render results
+                if (lastResults.length > 0) {
+                    displayResults(lastResults);
                 }
             } catch (error) {
-                console.error('Remove favorite error:', error);
-                showToast('Failed to remove favorite', 'error');
+                console.error('Favorite error:', error);
+                showToast('Error updating favorites', 'error');
             }
         }
 
-        // Update favorite button in real-time after adding/removing
-        function updateFavoriteButton(url) {
-            const buttonId = 'fav-btn-' + btoa(url).replace(/[^a-zA-Z0-9]/g, '');
-            const button = document.getElementById(buttonId);
-            if (button) {
-                const isFavorite = favorites.includes(url);
-                if (isFavorite) {
-                    button.onclick = function() { removeFromFavorites(url); };
-                    button.className = 'text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors';
-                    button.innerHTML = '<span class="material-icons text-xs">favorite</span> Remove from Favorites';
-                } else {
-                    button.onclick = function() { addToFavorites(url); };
-                    button.className = 'text-sm bg-snapit-magenta text-white px-3 py-1 rounded hover:bg-opacity-90 transition-colors';
-                    button.innerHTML = '<span class="material-icons text-xs">favorite_border</span> Add to Favorites';
-                }
-            }
-        }
-
-
-        async function loadUserFavorites() {
-            if (!currentUser || !userToken) {
-                favorites = [];
-                updateFavoritesDisplay();
-                return;
-            }
-
-            try {
-                const response = await fetch(API_BASE + '/favorites', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${userToken}`
-                    }
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    favorites = result.favorites || [];
-                    updateFavoritesDisplay();
-                    console.log('Loaded', favorites.length, 'favorites from DynamoDB for', currentUser.name);
-                } else {
-                    // Fallback to localStorage if API fails
-                    const localFavorites = localStorage.getItem('urlstatuschecker-favorites-' + currentUser.email);
-                    favorites = localFavorites ? JSON.parse(localFavorites) : [];
-                    updateFavoritesDisplay();
-                    console.warn('API failed, loaded from localStorage');
-                }
-            } catch (error) {
-                console.error('Error loading favorites:', error);
-                // Fallback to localStorage
-                const localFavorites = localStorage.getItem('urlstatuschecker-favorites-' + currentUser.email);
-                favorites = localFavorites ? JSON.parse(localFavorites) : [];
-                updateFavoritesDisplay();
-            }
-        }
-
-        function updateFavoritesDisplay() {
-            const favoritesList = document.getElementById('favorites-list');
-            const favoritesUsage = document.getElementById('favorites-usage');
-            const checkAllBtn = document.getElementById('check-all-favorites');
-            const loadFavoritesBtn = document.getElementById('load-favorites-btn');
-
-            if (favoritesUsage) {
-                const maxFavorites = planLimits[currentPlan].maxFavorites;
-                const maxText = maxFavorites === -1 ? 'unlimited' : maxFavorites;
-                favoritesUsage.textContent = favorites.length + ' / ' + maxText + ' favorites';
-            }
-
-            // Show/hide load favorites button
-            if (loadFavoritesBtn && currentUser) {
-                if (favorites.length > 0) {
-                    loadFavoritesBtn.classList.remove('hidden');
-                } else {
-                    loadFavoritesBtn.classList.add('hidden');
-                }
-            }
-            
-            if (favorites.length === 0) {
-                favoritesList.innerHTML = 
-                    '<div class="text-center text-gray-500 py-8">' +
-                        '<span class="material-icons text-4xl mb-4">add_circle_outline</span>' +
-                        '<p>Add URLs to your favorites from the main checker to see their status here</p>' +
-                        '<p class="text-sm mt-2">Your favorites will be automatically checked when you sign in</p>' +
-                    '</div>';
-                checkAllBtn.disabled = true;
-            } else {
-                favoritesList.innerHTML = favorites.map((url, index) => {
-                    const urlId = 'fav-url-' + index;
-                    const savedStatus = getFavoriteStatus(url);
-                    
-                    return '<div id="' + urlId + '" class="border rounded-lg p-4 bg-white hover:bg-gray-50 transition-colors">' +
-                        '<div class="flex justify-between items-start">' +
-                            '<div class="flex-1 min-w-0 mr-4">' +
-                                '<div class="font-medium text-gray-900 break-all mb-2">' + url + '</div>' +
-                                '<div id="status-' + urlId + '" class="text-sm">' + 
-                                    (savedStatus ? 
-                                        '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ' + 
-                                        (savedStatus.status >= 200 && savedStatus.status < 300 ? 'bg-green-100 text-green-800' :
-                                         savedStatus.status >= 300 && savedStatus.status < 400 ? 'bg-yellow-100 text-yellow-800' :
-                                         savedStatus.status >= 400 ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800') + '">' +
-                                        'Status: ' + savedStatus.status + ' (' + savedStatus.responseTime + 'ms)' +
-                                        '</span>' +
-                                        '<div class="text-xs text-gray-500 mt-1">Last checked: ' + new Date(savedStatus.timestamp).toLocaleString() + '</div>'
-                                        : 
-                                        '<span class="text-gray-500">Click Check to see status</span>'
-                                    ) +
-                                '</div>' +
-                            '</div>' +
-                            '<div class="flex flex-col gap-2">' +
-                                '<button onclick="checkSingleFavoriteUrl(\'' + url + '\', \'' + urlId + '\')" ' +
-                                        'class="text-sm bg-snapit-magenta text-white px-3 py-1 rounded hover:bg-opacity-90 transition-colors">' +
-                                    '<span class="material-icons text-xs">refresh</span> Check' +
-                                '</button>' +
-                                '<button onclick="removeFromFavorites(\'' + url + '\')" ' +
-                                        'class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors">' +
-                                    '<span class="material-icons text-xs">delete</span> Remove' +
-                                '</button>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>';
-                }).join('');
-                checkAllBtn.disabled = false;
-            }
-        }
-
-        // Store favorite URL status for persistence
-        function saveFavoriteStatus(url, status) {
-            if (!currentUser || !userUUID) return;
-            
-            const statusData = {
-                status: status.statusCode || status.status,
-                responseTime: status.responseTime || 0,
-                timestamp: new Date().toISOString()
-            };
-            
-            const key = `fav_status_${userUUID}_${btoa(url)}`;
-            localStorage.setItem(key, JSON.stringify(statusData));
-        }
-
-        // Get saved favorite URL status
-        function getFavoriteStatus(url) {
-            if (!currentUser || !userUUID) return null;
-            
-            const key = `fav_status_${userUUID}_${btoa(url)}`;
-            const saved = localStorage.getItem(key);
-            return saved ? JSON.parse(saved) : null;
-        }
-
-        // Check single favorite URL and update its display
-        async function checkSingleFavoriteUrl(url, urlId) {
-            try {
-                const statusElement = document.getElementById('status-' + urlId);
-                statusElement.innerHTML = '<span class="text-gray-500"><span class="material-icons animate-spin text-sm">refresh</span> Checking...</span>';
-                
-                const response = await fetch(API_BASE + '/batch/check', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ urls: [url] })
-                });
-                
-                const data = await response.json();
-                if (data.success && data.results && data.results[0]) {
-                    const result = data.results[0];
-                    saveFavoriteStatus(url, result);
-                    
-                    // Update display with new status
-                    const statusColor = result.statusCode >= 200 && result.statusCode < 300 ? 'bg-green-100 text-green-800' :
-                                       result.statusCode >= 300 && result.statusCode < 400 ? 'bg-yellow-100 text-yellow-800' :
-                                       result.statusCode >= 400 ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800';
-                    
-                    statusElement.innerHTML = 
-                        '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ' + statusColor + '">' +
-                        'Status: ' + result.statusCode + ' (' + result.responseTime + 'ms)' +
-                        '</span>' +
-                        '<div class="text-xs text-gray-500 mt-1">Just checked</div>';
-                }
-            } catch (error) {
-                document.getElementById('status-' + urlId).innerHTML = 
-                    '<span class="text-red-600">Error checking URL</span>';
-                showToast('Error checking URL: ' + error.message, 'error');
-            }
-        }
-
-        async function checkSingleUrl(url) {
-            try {
-                const response = await fetch(API_BASE + '/batch/check', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ urls: [url] })
-                });
-                
-                const data = await response.json();
-                if (data.success && data.results) {
-                    displayResults(data.results);
-                    showMainView();
-                }
-            } catch (error) {
-                showToast('Error checking URL: ' + error.message, 'error');
-            }
-        }
-
-        async function checkAllFavorites() {
-            if (favorites.length === 0) return;
-            
-            const rateLimit = checkRateLimit();
-            if (!rateLimit.allowed) {
-                showToast('Daily limit reached. Upgrade to Pro for unlimited checks!', 'warning');
-                return;
-            }
-            
-            const checkAllBtn = document.getElementById('check-all-favorites');
-            checkAllBtn.disabled = true;
-            checkAllBtn.innerHTML = '<span class="material-icons animate-spin">refresh</span> Checking all favorites...';
-            
-            try {
-                const response = await fetch(API_BASE + '/batch/check', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ urls: favorites })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`API returned ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                if (data.success && data.results) {
-                    // Save status for each favorite
-                    data.results.forEach(result => {
-                        saveFavoriteStatus(result.url, result);
-                    });
-                    
-                    // Update favorites display with new status
-                    updateFavoritesDisplay();
-                    updateRateLimit();
-                    showToast('All favorites checked successfully!', 'success');
-                } else {
-                    throw new Error(data.error || 'Unknown API error');
-                }
-            } catch (error) {
-                console.error('API Error details:', error);
-                showToast('Error checking favorites: ' + error.message, 'error');
-                
-                // Show detailed error info for debugging
-                if (error.message.includes('Failed to fetch')) {
-                    showToast('Network error - check your connection', 'error');
-                } else if (error.message.includes('400')) {
-                    showToast('Bad request - invalid URL format', 'error');
-                } else if (error.message.includes('403')) {
-                    showToast('Authentication required', 'error');
-                } else if (error.message.includes('500')) {
-                    showToast('Server error - try again later', 'error');
-                }
-            } finally {
-                checkAllBtn.disabled = false;
-                checkAllBtn.innerHTML = '<span class="material-icons">refresh</span> Check All Favorites';
-            }
-        }
-
+        // ==================== UTILITIES ====================
         function clearInput() {
             document.getElementById('url-input').value = '';
+            updateURLCounter();
         }
 
-        function clearResults() {
-            document.getElementById('results-section').classList.add('hidden');
-            lastResults = [];
+        function loadExamples() {
+            const examples = [
+                'https://google.com',
+                'https://github.com',
+                'https://stackoverflow.com',
+                'https://example.com',
+                'https://nonexistent-site-12345.com'
+            ];
+            document.getElementById('url-input').value = examples.join('\n');
+            updateURLCounter();
         }
 
-        function exportResults() {
+        function exportToCSV() {
             if (lastResults.length === 0) {
                 showToast('No results to export', 'warning');
                 return;
             }
 
-            const csvContent = [
-                ['URL', 'Status Code', 'Status Text', 'Response Time (ms)'].join(','),
-                ...lastResults.map(result => [
-                    '"' + (result.url || result.fullUrl) + '"',
-                    result.statusCode,
-                    '"' + (result.statusText || '') + '"',
-                    result.responseTime || 0
-                ].join(','))
-            ].join('\n');
+            const headers = ['URL', 'Status Code', 'Status Name', 'Response Time (ms)'];
+            const rows = lastResults.map(r => [
+                r.url || r.fullUrl,
+                r.statusCode,
+                statusCodeDatabase[r.statusCode]?.name || 'Unknown',
+                r.responseTime || 0
+            ]);
 
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
+            const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'url-status-check-' + new Date().toISOString().split('T')[0] + '.csv';
-            document.body.appendChild(a);
+            a.download = `url-status-check-${Date.now()}.csv`;
             a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+            URL.revokeObjectURL(url);
+
+            showToast('CSV exported successfully', 'success');
         }
 
+        // ==================== RATE LIMITING ====================
+        function checkRateLimit() {
+            const now = Date.now();
+            const maxChecks = planLimits[currentPlan].checksPerDay;
+
+            if (maxChecks === -1) return { allowed: true, remaining: 'unlimited' };
+
+            if (now > rateLimit.resetTime) {
+                rateLimit = { count: 0, resetTime: now + 24 * 60 * 60 * 1000 };
+                saveRateLimitToStorage();
+            }
+
+            return {
+                allowed: rateLimit.count < maxChecks,
+                remaining: Math.max(0, maxChecks - rateLimit.count)
+            };
+        }
+
+        function updateRateLimit() {
+            if (planLimits[currentPlan].checksPerDay !== -1) {
+                rateLimit.count++;
+                saveRateLimitToStorage();
+            }
+            updateRateLimitDisplay();
+        }
+
+        function updateRateLimitDisplay() {
+            const check = checkRateLimit();
+            const display = document.getElementById('rate-limit-display');
+
+            if (check.remaining === 'unlimited') {
+                display.textContent = '∞ Unlimited checks';
+            } else {
+                display.textContent = `${check.remaining} checks left today`;
+            }
+        }
+
+        function loadRateLimitFromStorage() {
+            const stored = localStorage.getItem('urlstatuschecker-rate-limit');
+            if (stored) {
+                rateLimit = JSON.parse(stored);
+            }
+            updateRateLimitDisplay();
+        }
+
+        function saveRateLimitToStorage() {
+            localStorage.setItem('urlstatuschecker-rate-limit', JSON.stringify(rateLimit));
+        }
+
+        // ==================== AUTHENTICATION ====================
+        function signIn() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.prompt();
+            }
+        }
+
+        async function handleGoogleAuth(response) {
+            try {
+                const authResponse = await fetch('https://auth.urlstatuschecker.com/auth/google', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        credential: response.credential,
+                        idToken: response.credential
+                    })
+                });
+
+                if (!authResponse.ok) throw new Error('Auth failed');
+
+                const data = await authResponse.json();
+                currentUser = data.user;
+                userToken = data.token;
+
+                localStorage.setItem('urlstatuschecker-token', userToken);
+                localStorage.setItem('urlstatuschecker-user', JSON.stringify(currentUser));
+
+                updateAuthDisplay();
+                loadUserFavorites();
+                showToast(`Welcome, ${currentUser.name}!`, 'success');
+
+            } catch (error) {
+                console.error('Auth error:', error);
+                showToast('Authentication failed', 'error');
+            }
+        }
+
+        function updateAuthDisplay() {
+            const container = document.getElementById('auth-container');
+            if (currentUser) {
+                container.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <img src="${currentUser.picture}" alt="${currentUser.name}" class="w-10 h-10 rounded-full border-2 border-primary">
+                        <span class="font-semibold text-gray-700">${currentUser.name}</span>
+                        <button onclick="signOut()" class="px-4 py-2 border-2 border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-all">
+                            <span data-i18n="sign-out">Sign Out</span>
+                        </button>
+                    </div>
+                `;
+                document.getElementById('file-upload-zone').classList.remove('hidden');
+            } else {
+                container.innerHTML = `
+                    <button id="sign-in-btn" onclick="signIn()" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <span class="material-icons text-sm align-middle mr-1">login</span>
+                        <span data-i18n="sign-in">Sign In</span>
+                    </button>
+                `;
+                document.getElementById('file-upload-zone').classList.add('hidden');
+            }
+            applyTranslations();
+        }
+
+        function signOut() {
+            currentUser = null;
+            userToken = null;
+            favorites = [];
+            localStorage.removeItem('urlstatuschecker-token');
+            localStorage.removeItem('urlstatuschecker-user');
+            updateAuthDisplay();
+            showToast('Signed out successfully', 'success');
+        }
+
+        async function checkExistingSession() {
+            const token = localStorage.getItem('urlstatuschecker-token');
+            const user = localStorage.getItem('urlstatuschecker-user');
+
+            if (token && user) {
+                currentUser = JSON.parse(user);
+                userToken = token;
+                updateAuthDisplay();
+                loadUserFavorites();
+            }
+        }
+
+        async function loadUserFavorites() {
+            if (!userToken) return;
+
+            try {
+                const response = await fetch(API_BASE + '/favorites', {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    favorites = data.favorites || [];
+                }
+            } catch (error) {
+                console.error('Load favorites error:', error);
+            }
+        }
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const colors = {
+                success: 'bg-green-100 border-green-400 text-green-700',
+                error: 'bg-red-100 border-red-400 text-red-700',
+                warning: 'bg-yellow-100 border-yellow-400 text-yellow-700',
+                info: 'bg-blue-100 border-blue-400 text-blue-700'
+            };
+
+            const icons = {
+                success: 'check_circle',
+                error: 'error',
+                warning: 'warning',
+                info: 'info'
+            };
+
+            toast.className = `glass ${colors[type]} border-2 rounded-xl px-6 py-4 shadow-2xl animate-slide-up flex items-center gap-3 min-w-[300px]`;
+            toast.innerHTML = `
+                <span class="material-icons">${icons[type]}</span>
+                <span class="font-medium flex-1">${message}</span>
+                <button onclick="this.parentElement.remove()" class="material-icons text-sm hover:opacity-70">close</button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+
+        // ==================== PRICING MODAL ====================
         function showPricingModal() {
             document.getElementById('pricing-modal').classList.remove('hidden');
+            // Populate pricing content
+            const content = document.getElementById('pricing-content');
+            content.innerHTML = `
+                <div class="glass rounded-2xl p-6 border-2 border-gray-300">
+                    <h4 class="text-2xl font-bold text-gray-900 mb-4">Free</h4>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$0<span class="text-lg font-normal text-gray-500">/mo</span></div>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> 4 checks/day</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> 100 URLs per check</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> 100 favorites</li>
+                    </ul>
+                    <button disabled class="w-full py-3 bg-gray-300 text-gray-500 rounded-lg font-bold cursor-not-allowed">Current Plan</button>
+                </div>
+                <div class="glass rounded-2xl p-6 border-4 border-primary relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-white px-4 py-1 rounded-full text-sm font-bold">Popular</div>
+                    <h4 class="text-2xl font-bold text-gray-900 mb-4">Pro</h4>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$29<span class="text-lg font-normal text-gray-500">/mo</span></div>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> Unlimited checks</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> 100 URLs per check</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> 1,000 favorites</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> Email alerts</li>
+                    </ul>
+                    <button onclick="upgradePlan('pro')" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-bold hover:shadow-xl transition-all">Upgrade to Pro</button>
+                </div>
+                <div class="glass rounded-2xl p-6 border-2 border-gray-300">
+                    <h4 class="text-2xl font-bold text-gray-900 mb-4">Business</h4>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$99<span class="text-lg font-normal text-gray-500">/mo</span></div>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> Unlimited checks</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> 500 URLs per check</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> Unlimited favorites</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> Priority support</li>
+                        <li class="flex items-center gap-2"><span class="material-icons text-green-500">check_circle</span> API access</li>
+                    </ul>
+                    <button onclick="upgradePlan('business')" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-bold hover:shadow-xl transition-all">Upgrade to Business</button>
+                </div>
+            `;
         }
 
         function closePricingModal() {
             document.getElementById('pricing-modal').classList.add('hidden');
         }
 
-        function selectPlan(plan) {
-            // Live Stripe price IDs from production setup
+        async function upgradePlan(plan) {
+            if (!currentUser) {
+                showToast('Please sign in to upgrade', 'info');
+                signIn();
+                return;
+            }
+
             const priceIds = {
-                'starter': 'price_1RywuZRE8RY21XQRPZeybWcZ',  // $16/month
-                'professional': 'price_1RywulRE8RY21XQRQ9Y1Qe5L', // $49/month  
-                'business': 'price_1RywuwRE8RY21XQRMligBZXP',    // $149/month
-                'enterprise': 'price_1Rywv8RE8RY21XQRjsNYvQ3U' // $399/month
+                pro: 'price_1RywuZRE8RY21XQRPZeybWcZ',
+                business: 'price_1RywuwRE8RY21XQRMligBZXP'
             };
-            
-            const priceId = priceIds[plan.toLowerCase()];
-            if (!priceId) {
-                showToast('Plan not found. Please try again.', 'error');
-                return;
-            }
-            
-            // Initialize Stripe checkout
-            if (typeof Stripe === 'undefined') {
-                loadStripe(priceId, plan);
-                return;
-            }
-            
-            initiateCheckout(priceId, plan);
-        }
-        
-        function loadStripe(priceId, plan) {
-            const script = document.createElement('script');
-            script.src = 'https://js.stripe.com/v3/';
-            script.onload = () => initiateCheckout(priceId, plan);
-            document.head.appendChild(script);
-        }
-        
-        function initiateCheckout(priceId, plan) {
-            const stripe = Stripe('pk_live_51SEhK7Ikj5YQseOZdDlxSF559wAxa2VaukNqsoFjehtq26Yr6lftlDso5HxqGyKVZy907ylLHgFOPYp9tBKLEDzk00KEYnlJ15');
-            
-            showToast('Redirecting to secure checkout...', 'info');
-            
-            stripe.redirectToCheckout({
-                lineItems: [{
-                    price: priceId,
-                    quantity: 1,
-                }],
-                mode: 'subscription',
-                successUrl: window.location.origin + '/success?session_id={CHECKOUT_SESSION_ID}',
-                cancelUrl: window.location.origin + '/',
-                customerEmail: currentUser ? currentUser.email : undefined,
-                metadata: {
-                    plan: plan,
-                    userId: userUUID || 'anonymous'
-                }
-            }).then(function (result) {
-                if (result.error) {
-                    showToast('Checkout failed: ' + result.error.message, 'error');
-                }
-            });
-            
-            closePricingModal();
-        }
 
-        // Toast notification system for smooth UX
-        function showToast(message, type = 'info') {
-            // Remove any existing toasts
-            const existingToasts = document.querySelectorAll('.toast-notification');
-            existingToasts.forEach(toast => toast.remove());
-
-            // Create toast element
-            const toast = document.createElement('div');
-            toast.className = `toast-notification fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform transition-all duration-300 translate-x-full z-50`;
-            
-            // Set background color based on type
-            const colors = {
-                success: 'bg-green-500',
-                error: 'bg-red-500',
-                warning: 'bg-orange-500',
-                info: 'bg-blue-500'
-            };
-            toast.className += ` ${colors[type] || colors.info}`;
-            
-            toast.textContent = message;
-            
-            // Add to DOM
-            document.body.appendChild(toast);
-            
-            // Animate in
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-            }, 100);
-            
-            // Remove after 4 seconds
-            setTimeout(() => {
-                toast.style.transform = 'translateX(full)';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-    </script>
-
-    <!-- Unified Footer -->
-    <footer class="border-t border-gray-200 mt-16 py-12" style="background-color: #FFF8F0;">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <!-- Company -->
-                <div>
-                    <h3 class="font-bold text-gray-900 mb-4">SnapIT Software</h3>
-                    <p class="text-gray-600 text-sm mb-4">Professional URL status checking with enterprise features and real-time monitoring.</p>
-                    <div class="flex space-x-3">
-                        <a href="https://twitter.com/snapitsoftware" class="text-gray-400 hover:text-snapit-magenta transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
-                        </a>
-                        <a href="https://linkedin.com/company/snapitsoftware" class="text-gray-400 hover:text-snapit-magenta transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- SnapIT Apps -->
-                <div>
-                    <h3 class="font-bold text-gray-900 mb-4">Our Applications</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="https://snapitagent.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">SnapIT Agent - AI Assistants</a></li>
-                        <li><a href="https://snapitforms.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">SnapIT Forms - Form Builder</a></li>
-                        <li><a href="https://snapitanalytics.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">SnapIT Analytics - Website Analytics</a></li>
-                        <li><a href="https://snapitqr.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">SnapIT QR - QR Code Generator</a></li>
-                        <li><a href="https://snapiturl.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">SnapIT URL - URL Shortener</a></li>
-                        <li><a href="https://urlstatuschecker.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">URL Status Checker</a></li>
-                    </ul>
-                </div>
-
-                <!-- Resources -->
-                <div>
-                    <h3 class="font-bold text-gray-900 mb-4">Resources</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="/docs" class="text-gray-600 hover:text-snapit-magenta transition-colors">Documentation</a></li>
-                        <li><a href="https://snapitsoftware.com/api" class="text-gray-600 hover:text-snapit-magenta transition-colors">API Reference</a></li>
-                        <li><a href="https://snapitsoftware.com/integrations" class="text-gray-600 hover:text-snapit-magenta transition-colors">Integrations</a></li>
-                        <li><a href="https://snapitsoftware.com/support" class="text-gray-600 hover:text-snapit-magenta transition-colors">Support Center</a></li>
-                        <li><a href="#" onclick="showFeedbackModal()" class="text-gray-600 hover:text-snapit-magenta transition-colors cursor-pointer">Send Feedback</a></li>
-                        <li><a href="https://snapitsoftware.com/blog" class="text-gray-600 hover:text-snapit-magenta transition-colors">Blog</a></li>
-                        <li><a href="https://snapitsoftware.com/status" class="text-gray-600 hover:text-snapit-magenta transition-colors">System Status</a></li>
-                    </ul>
-                </div>
-
-                <!-- Legal -->
-                <div>
-                    <h3 class="font-bold text-gray-900 mb-4">Legal</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="/privacy" class="text-gray-600 hover:text-snapit-magenta transition-colors">Privacy Policy</a></li>
-                        <li><a href="/terms" class="text-gray-600 hover:text-snapit-magenta transition-colors">Terms of Service</a></li>
-                        <li><a href="https://snapitsoftware.com/cookies" class="text-gray-600 hover:text-snapit-magenta transition-colors">Cookie Policy</a></li>
-                        <li><a href="https://snapitsoftware.com/gdpr" class="text-gray-600 hover:text-snapit-magenta transition-colors">GDPR Compliance</a></li>
-                        <li><a href="https://snapitsoftware.com/security" class="text-gray-600 hover:text-snapit-magenta transition-colors">Security</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <div class="text-sm text-gray-600">
-                    © 2025 SnapIT Software. All rights reserved. Professional URL monitoring and status checking.
-                </div>
-                <div class="flex items-center space-x-6 mt-4 md:mt-0 text-sm">
-                    <a href="mailto:support@snapitsoftware.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">
-                        Contact Support
-                    </a>
-                    <span class="text-gray-300">|</span>
-                    <a href="https://snapitsoftware.com" class="text-gray-600 hover:text-snapit-magenta transition-colors">
-                        SnapIT Software
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Feedback Modal -->
-    <div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;" aria-hidden="true">
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-snapit-magenta">Send Feedback</h3>
-                <button onclick="closeFeedbackModal()" class="text-gray-500 hover:text-gray-700" aria-label="Close modal">
-                    <span class="material-icons">close</span>
-                </button>
-            </div>
-            
-            <form action="https://api.web3forms.com/submit" method="POST" class="space-y-4" id="feedback-form">
-                <input type="hidden" name="access_key" value="941dde05-6699-4793-b170-fb81b1659e32">
-                <input type="hidden" name="subject" value="URL Status Checker - User Feedback">
-                <input type="hidden" name="from_name" value="urlstatuschecker.com">
-                
-                <div>
-                    <label for="feedback_type" class="block text-sm font-medium text-gray-700 mb-2">Feedback Type</label>
-                    <select name="feedback_type" id="feedback_type" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-snapit-magenta focus:border-transparent">
-                        <option value="">Select type...</option>
-                        <option value="Feature Request">Feature Request</option>
-                        <option value="Bug Report">Bug Report</option>
-                        <option value="General Feedback">General Feedback</option>
-                        <option value="Support Question">Support Question</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="feedback_message" class="block text-sm font-medium text-gray-700 mb-2">Your Message</label>
-                    <textarea name="message" id="feedback_message" required rows="4" placeholder="Tell us what you think or what can be improved..."
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-snapit-magenta focus:border-transparent"></textarea>
-                </div>
-
-                <div>
-                    <label for="feedback_email" class="block text-sm font-medium text-gray-700 mb-2">Email (Optional)</label>
-                    <input type="email" name="email" id="feedback_email" placeholder="your@email.com"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-snapit-magenta focus:border-transparent">
-                </div>
-
-                <div class="flex gap-3 pt-4">
-                    <button type="submit" class="flex-1 bg-snapit-magenta text-white px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition-colors">
-                        Send Feedback
-                    </button>
-                    <button type="button" onclick="closeFeedbackModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Feedback Modal Functions
-        function showFeedbackModal() {
-            const modal = document.getElementById('feedbackModal');
-            if (modal) {
-                modal.style.display = 'flex';
-                modal.setAttribute('aria-hidden', 'false');
-            }
-        }
-
-        function closeFeedbackModal() {
-            const modal = document.getElementById('feedbackModal');
-            if (modal) {
-                modal.style.display = 'none';
-                modal.setAttribute('aria-hidden', 'true');
-            }
-        }
-
-        // Close modal when clicking outside
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('feedbackModal');
-            if (modal && e.target === modal) {
-                closeFeedbackModal();
-            }
-        });
-
-        // DNS Mapping Modal Function
-        function showDnsMapping(encodedUrl, encodedResult) {
-            const url = decodeURIComponent(encodedUrl);
-            const result = JSON.parse(decodeURIComponent(encodedResult));
-
-            // Create modal HTML
-            const modalHtml = `
-                <div id="dnsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: flex;">
-                    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div class="p-6">
-                            <div class="flex justify-between items-start mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">DNS & Server Information</h3>
-                                <button onclick="closeDnsModal()" class="text-gray-400 hover:text-gray-600">
-                                    <span class="material-icons">close</span>
-                                </button>
-                            </div>
-
-                            <div class="space-y-4">
-                                <div>
-                                    <h4 class="font-medium text-gray-700 mb-2">🌐 URL Information</h4>
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <p class="text-sm"><strong>URL:</strong> ${url}</p>
-                                        <p class="text-sm"><strong>Status:</strong> ${result.statusCode} ${result.statusText || ''}</p>
-                                        <p class="text-sm"><strong>Response Time:</strong> ${result.responseTime || 0}ms</p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h4 class="font-medium text-gray-700 mb-2">🔍 DNS Resolution</h4>
-                                    <div id="dnsLoading" class="bg-blue-50 p-3 rounded">
-                                        <p class="text-sm text-blue-600">🔄 Looking up DNS records...</p>
-                                    </div>
-                                    <div id="dnsResults" class="hidden bg-gray-50 p-3 rounded space-y-2"></div>
-                                </div>
-
-                                <div>
-                                    <h4 class="font-medium text-gray-700 mb-2">📊 Server Headers</h4>
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <div id="headerResults">
-                                            ${result.headers ? Object.entries(result.headers).map(([key, value]) =>
-                                                `<p class="text-sm"><strong>${key}:</strong> ${value}</p>`
-                                            ).join('') : '<p class="text-sm text-gray-500">Headers not available</p>'}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-6 flex justify-end">
-                                <button onclick="closeDnsModal()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Add modal to page
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-            // Fetch DNS information
-            fetchDnsInfo(url);
-        }
-
-        function closeDnsModal() {
-            const modal = document.getElementById('dnsModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        // Global DNS Propagation Check
-        function checkGlobalDns(encodedUrl) {
-            const url = decodeURIComponent(encodedUrl);
-            const domain = new URL(url).hostname;
-
-            // Create unique window name based on domain
-            const windowName = 'dns_check_' + domain.replace(/[^a-zA-Z0-9]/g, '_');
-
-            // Open DNS propagation checker in new window/tab
-            const dnsWindow = window.open(
-                `/dns-propagation.html?domain=${encodeURIComponent(domain)}&source=${encodeURIComponent(url)}`,
-                windowName,
-                'width=1200,height=800,scrollbars=yes,resizable=yes'
-            );
-
-            // Check if popup was blocked
-            if (!dnsWindow || dnsWindow.closed || typeof dnsWindow.closed === 'undefined') {
-                // Fallback: show toast with instructions
-                showToast('Please allow popups to open the DNS propagation checker', 'warning');
-
-                // Alternative: try to open in same tab after delay
-                setTimeout(() => {
-                    if (confirm('Open DNS propagation checker in current tab?')) {
-                        window.location.href = `/dns-propagation.html?domain=${encodeURIComponent(domain)}&source=${encodeURIComponent(url)}`;
-                    }
-                }, 1000);
-            } else {
-                // Focus the new window
-                dnsWindow.focus();
-                showToast(`Opening global DNS propagation check for ${domain}`, 'info');
-            }
-        }
-
-        async function fetchDnsInfo(url) {
             try {
-                const domain = new URL(url).hostname;
-
-                // Make API call to get DNS info
-                const response = await fetch(API_BASE + '/dns/lookup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${userToken || 'anonymous'}`
-                    },
-                    body: JSON.stringify({ domain: domain })
+                const { error } = await stripe.redirectToCheckout({
+                    lineItems: [{ price: priceIds[plan], quantity: 1 }],
+                    mode: 'subscription',
+                    successUrl: window.location.origin + '?success=true',
+                    cancelUrl: window.location.origin + '?canceled=true',
+                    customerEmail: currentUser.email
                 });
 
-                const loadingEl = document.getElementById('dnsLoading');
-                const resultsEl = document.getElementById('dnsResults');
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    if (data.success && data.dns) {
-                        let dnsHtml = '';
-
-                        if (data.dns.A) {
-                            dnsHtml += `<p class="text-sm"><strong>A Records (IPv4):</strong> ${data.dns.A.join(', ')}</p>`;
-                        }
-                        if (data.dns.AAAA) {
-                            dnsHtml += `<p class="text-sm"><strong>AAAA Records (IPv6):</strong> ${data.dns.AAAA.join(', ')}</p>`;
-                        }
-                        if (data.dns.CNAME) {
-                            dnsHtml += `<p class="text-sm"><strong>CNAME:</strong> ${data.dns.CNAME.join(', ')}</p>`;
-                        }
-                        if (data.dns.MX) {
-                            dnsHtml += `<p class="text-sm"><strong>MX Records:</strong> ${data.dns.MX.join(', ')}</p>`;
-                        }
-                        if (data.dns.NS) {
-                            dnsHtml += `<p class="text-sm"><strong>Name Servers:</strong> ${data.dns.NS.join(', ')}</p>`;
-                        }
-
-                        resultsEl.innerHTML = dnsHtml || '<p class="text-sm text-gray-500">No DNS records found</p>';
-                    } else {
-                        resultsEl.innerHTML = '<p class="text-sm text-red-500">Unable to fetch DNS records</p>';
-                    }
-                } else {
-                    resultsEl.innerHTML = '<p class="text-sm text-red-500">DNS lookup failed</p>';
+                if (error) {
+                    showToast('Upgrade failed. Please try again.', 'error');
                 }
-
-                loadingEl.classList.add('hidden');
-                resultsEl.classList.remove('hidden');
-
             } catch (error) {
-                console.error('DNS lookup error:', error);
-                const loadingEl = document.getElementById('dnsLoading');
-                const resultsEl = document.getElementById('dnsResults');
-
-                loadingEl.classList.add('hidden');
-                resultsEl.classList.remove('hidden');
-                resultsEl.innerHTML = '<p class="text-sm text-red-500">DNS lookup error: ' + error.message + '</p>';
+                console.error('Upgrade error:', error);
+                showToast('Upgrade failed. Please try again.', 'error');
             }
         }
-
-        // Handle form submission success
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form[action*="snapitforms.com"]');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    setTimeout(() => {
-                        closeFeedbackModal();
-                        showToast('Thank you for your feedback! We appreciate your input.', 'success');
-                    }, 100);
-                });
-            }
-        });
     </script>
 </body>
 </html>
